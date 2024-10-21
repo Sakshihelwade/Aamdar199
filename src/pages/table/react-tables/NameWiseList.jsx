@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+      import React, { useEffect, useState } from "react";
 import CommonTable from "./CommonTable";
 import Card from "../../../components/ui/Card";
 import InputGroup from "@/components/ui/InputGroup";
@@ -16,7 +16,7 @@ import AddNewVoter from "./AddNewVoter";
 const NameWiseList = () => {
   const [villageId, setVillageId] = useState("");
   const [villageName, setVillageName] = useState("");
-  const [gathName, setGathName] = useState('')
+    const [gathName, setGathName] = useState('')
   const [boothNo, setBoothNo] = useState("");
   const [srNo, setSrNo] = useState("");
   const [voterName, setVoterName] = useState("");
@@ -186,6 +186,7 @@ const NameWiseList = () => {
             <span className="font-bold text-lg">199</span>
           </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+
             <div>
               <label className="form-label" htmlFor="mul_1">
                 गट
@@ -216,6 +217,7 @@ const NameWiseList = () => {
                 classNamePrefix="select"
               />
             </div>
+
 
 
 

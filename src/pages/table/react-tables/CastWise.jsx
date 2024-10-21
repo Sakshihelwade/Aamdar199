@@ -147,7 +147,7 @@ useEffect(()=>{
             <span className="font-bold text-lg">199</span>
           </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          <div>
+          {/* <div>
         <label className="form-label" htmlFor="mul_1">
         गट
         </label>
@@ -176,7 +176,7 @@ useEffect(()=>{
   className="react-select"
   classNamePrefix="select"
 />
-</div>
+</div> */}
          
           <div>
         <label className="form-label" htmlFor="mul_1">
