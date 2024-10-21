@@ -140,6 +140,7 @@ import CommonTable from "./pages/table/react-tables/CommonTable";
 import AddressWiseTable2 from "./pages/table/react-tables/AddressWiseTable2";
 import AddressWiseTable from "./pages/table/react-tables/AddressWiseTable";
 import ExportData from "./pages/table/Pdf/ExportData";
+import ReportGraph from "./pages/table/ReportGraph/ReportGraph";
 
 function App() {
   return (
@@ -286,6 +287,9 @@ function App() {
           <Route path="new-voters" element={<NewVoters />} />
           {/* export pdf  */}
           <Route path="export-pdf" element={<ExportData/>}/>
+          {/* graphical representation  */}
+          <Route path="report-graph" element={<ReportGraph/>}/>
+
           {/* App pages */}
           <Route path="todo" element={<TodoPage />} />
           <Route path="email" element={<EmailPage />} />

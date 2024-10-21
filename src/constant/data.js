@@ -151,7 +151,13 @@ export const menuItems = [
   //     },
   //   ],
   // },
-
+  {
+    title: "अहवाल",
+    icon: "heroicons-outline:table",
+    link: "report-graph",
+    isOpen: true,
+    isHide: true,
+  },
   {
     title: "Export PDF",
     icon: "heroicons-outline:table",

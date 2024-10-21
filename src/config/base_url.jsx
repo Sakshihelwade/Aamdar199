@@ -3,8 +3,8 @@
 
 
 // live 199
-export const base_url="http://65.0.203.146:5500"
+//export const base_url="http://65.0.203.146:5500"
 
 
-// development
-// export const base_url="http://43.205.254.28:5500"
+//development
+ export const base_url="http://43.205.254.28:5500"
