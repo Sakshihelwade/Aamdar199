@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+      import React, { useEffect, useState } from "react";
 import CommonTable from "./CommonTable";
 import Card from "../../../components/ui/Card";
 import InputGroup from "@/components/ui/InputGroup";
@@ -186,72 +186,72 @@ const NameWiseList = () => {
             <span className="font-bold text-lg">199</span>
           </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            <div>
-              <label className="form-label" htmlFor="mul_1">
-                गट
-              </label>
-              <Select
-                // isClearable={true}
-                placeholder="गट"
-                name="गट"
-                value={gathOption.find(option => option.value === gathName) || null}
-                options={gathOption}
-                onChange={(selectedOption) => setGathName(selectedOption?.value || null)}
-                className="react-select"
-                classNamePrefix="select"
-              />
-            </div>
-            <div>
-              <label className="form-label" htmlFor="mul_1">
-                गण
-              </label>
-              <Select
-                // isClearable={true}
-                placeholder="गण"
-                name="गण"
-                value={villageOption.find(option => option.value === villageId) || null}
-                options={villageOption}
-                onChange={(selectedOption) => setGathNo(selectedOption?.value || null)}
-                className="react-select"
-                classNamePrefix="select"
-              />
-            </div>
+          {/* <div>
+        <label className="form-label" htmlFor="mul_1">
+        गट
+        </label>
+  <Select
+  // isClearable={true}
+  placeholder="गट"
+  name="गट" 
+  value={gathOption.find(option => option.value === gathName) || null} 
+  options={gathOption}
+  onChange={(selectedOption) => setGathName(selectedOption?.value || null)} 
+  className="react-select"
+  classNamePrefix="select"
+/>
+</div>
+          <div>
+        <label className="form-label" htmlFor="mul_1">
+        गण
+        </label>
+  <Select
+  // isClearable={true}
+  placeholder="गण"
+  name="गण" 
+  value={villageOption.find(option => option.value === villageId) || null} 
+  options={villageOption}
+  onChange={(selectedOption) => setGathNo(selectedOption?.value || null)} 
+  className="react-select"
+  classNamePrefix="select"
+/>
+</div> */}
 
 
 
-            <div>
-              <label className="form-label" htmlFor="mul_1">
-                गाव
-              </label>
-              <Select
-                // isClearable={true}
-                placeholder="गाव"
-                name="गाव"
-                value={villageOption.find(option => option.value === villageId) || null}
-                options={villageOption}
-                onChange={handleVillageChange}
-                className="react-select"
-                classNamePrefix="select"
-              />
-            </div>
+              <div>
+        <label className="form-label" htmlFor="mul_1">
+        गाव
+        </label>
+  <Select
+  // isClearable={true}
+  placeholder="गाव"
+  name="गाव" 
+  value={villageOption.find(option => option.value === villageId) || null} 
+  options={villageOption}
+  onChange={handleVillageChange} 
+  className="react-select"
+  classNamePrefix="select"
+/>
+</div>
 
-            <div>
-              <label className="form-label" htmlFor="mul_1">
-                भाग/बूथ नं
-              </label>
-              <Select
-                // isClearable={true}
-                placeholder="भाग/बूथ नं"
-                name="भाग/बूथ नं"
-                value={boothOption.find(option => option.value === boothNo) || null}
-                options={boothOption}
-                onChange={(selectedOption) => setBoothNo(selectedOption?.value || null)}
-                className="react-select"
-                classNamePrefix="select"
-              />
-            </div>
+<div>
+  <label className="form-label" htmlFor="mul_1">
+    भाग/बूथ नं
+  </label>
+  <Select
+  // isClearable={true}
+  placeholder="भाग/बूथ नं"
+  name="भाग/बूथ नं"
+  value={boothOption.find(option => option.value === boothNo) || null} 
+  options={boothOption}
+  onChange={(selectedOption) => setBoothNo(selectedOption?.value || null)} 
+  className="react-select"
+  classNamePrefix="select"
+/>
+</div>
 
-            {/* <Select
+{/* <Select
               label="भाग/बूथ नं"
               className="w-full"
               placeholder="भाग/बूथ नं"

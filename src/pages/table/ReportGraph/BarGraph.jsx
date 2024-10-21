@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from "react";
 // import Chart from "react-apexcharts";
 // import useDarkMode from "@/hooks/useDarkMode";
@@ -204,7 +205,6 @@
 
 // export default BarGraph;
 
-
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import useDarkMode from "@/hooks/useDarkMode";
@@ -212,23 +212,31 @@ import useRtl from "@/hooks/useRtl";
 import axios from "axios";
 import { base_url } from "../../../config/base_url";
 
-const BarGraph = ({ height = 400 }) => {
-  const [max10, setMax10] = useState([]);
+const BarGraph = ({ height = 400, year, village }) => {
+  const [graphData, setGraphData] = useState([]);
+  const [party, setParty] = useState([]);
+  const [percentage, setPercentage] = useState([]);
+  const [votes, setVotes] = useState([]);
+  
   const [isDark] = useDarkMode();
   const [isRtl] = useRtl();
 
-  function getTop10VoterAreas(data) {
-    const sortedData = data
-      .filter(item => item.address !== null)
-      .sort((a, b) => b.totalCount - a.totalCount);
-    
-    setMax10(sortedData.slice(0, 10));
-  }
-
-  const getVillageWiseCount = () => {
-    axios.get(`${base_url}/api/surve/getAddressMaleFemaleCount`)
+  const getGraphData = () => {
+    axios.get(`${base_url}/GraphAPI?year=${year}&village=${village}`)
       .then((resp) => {
-        getTop10VoterAreas(resp.data.data);
+        const candidates = resp.data[0]?.candidates || []; // Handle case where candidates might be undefined
+        setGraphData(candidates);
+        
+        // Extract party names, percentages, and votes
+        const partyNames = candidates.map(candidate => candidate.name);
+        const percentages = candidates.map(candidate => candidate.percentage);
+        const votes = candidates.map(candidate => candidate.votes);
+        
+        // Set the extracted data to state
+        setParty(partyNames);
+        setPercentage(percentages);
+        setVotes(votes);
+
       })
       .catch((error) => {
         console.log(error);
@@ -236,18 +244,16 @@ const BarGraph = ({ height = 400 }) => {
   };
 
   useEffect(() => {
-    getVillageWiseCount();
-  }, []);
+    getGraphData();
+  }, [village, year]); // API will be called whenever `village` or `year` changes
 
-  const Address = max10.map(item => item.address);
-  const totalCount = max10.map(item => item.totalCount);
-
-  // Single series with total voter counts
+  // Update series and options based on the data fetched
   const series = [
     {
       name: "एकूण मतदार",
-      data: totalCount,
-    }
+      data: votes, // Set the votes array for the series data
+    },
+
   ];
 
   const options = {
@@ -264,7 +270,7 @@ const BarGraph = ({ height = 400 }) => {
       },
     },
     xaxis: {
-      categories: Address,
+      categories: party.length ? party : ["No Data"], // Handle empty categories
       labels: {
         style: {
           colors: isDark ? "#CBD5E1" : "#475569",
@@ -282,9 +288,17 @@ const BarGraph = ({ height = 400 }) => {
       },
     },
     dataLabels: {
-      enabled: false, // Disable data labels on bars
+
+      enabled: true,
+      formatter: function (val, { seriesIndex }) {
+        return `${percentage[seriesIndex] || 0}%`; // Default to 0% if no percentage
+      },
+      style: {
+        colors: ['#000000'], 
+        fontSize: '12px',
+      },
     },
-    colors: ["#007bff"], // Single color for total voters
+    colors: ["#007bff"],
   };
 
   return (
