@@ -74,11 +74,11 @@ const BySupplementary = () => {
       .then((resp) => {
         setAllVoter(resp.data.voters);
         setVoterCount(resp.data);
-        toast.success('Filter Sucessfully')
+        // toast.success('Filter Sucessfully')
       })
       .catch((error) => {
         console.log(error);
-        toast.warning('No results found for the provided search criteria')
+        // toast.warning('No results found for the provided search criteria')
       });
   };
 

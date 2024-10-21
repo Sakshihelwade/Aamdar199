@@ -376,7 +376,7 @@ import {
 import Modal from "../../ui/Modal";
 import axios from "axios";
 import { base_url } from "../../../config/base_url";
-import InputGroup from "../../ui/Inputgroup";
+import InputGroup from "../../../components/ui/InputGroup"
 
 
 const CompanyTable = () => {
