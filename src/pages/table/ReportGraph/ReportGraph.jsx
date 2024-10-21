@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import BarGraph from './BarGraph';
 // import { Card, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
@@ -64,10 +65,12 @@ const id=localStorage.getItem('_id')
         getYear()
       },[])
 
+
     return (
         <>
             <div className="grid grid-cols-12 gap-5">
                 {/* <div className="lg:col-span-12 col-span-12">
+
                     <Card className='p-4'>
                         <div className="mb-2 flex justify-between">
                             <h6 className="font-bold text-[#b91c1c]">अहवाल</h6>
@@ -86,8 +89,10 @@ const id=localStorage.getItem('_id')
                                     // isClearable={true}
                                     placeholder="वर्ष"
                                     name="वर्ष"
+
                                     // value={}
                                     // options={villageOption}
+
                                     onChange={handleVillageChange}
                                     className="react-select"
                                     classNamePrefix="select"
@@ -159,6 +164,7 @@ const id=localStorage.getItem('_id')
                         </div>
                         <div className="legend-ring">
                             <BarGraph  year={yearName} village={villageName}/>
+
                         </div>
                     </Card>
                 </div>

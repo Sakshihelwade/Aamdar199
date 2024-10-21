@@ -20,10 +20,12 @@ const RedGreenVoter = () => {
   const [allVoter, setAllVoter] = useState([])
   const [voterCount, setVoterCount] = useState(0)
   const [boothNo, setBoothNo] = useState("")
+  const [colorOptions, setColorOptions] = useState([]);
 
-  const totalmalefemale=voterCount?.maleCount + voterCount?.femaleCount
-  const other=voterCount?.total - totalmalefemale || 0
+  const totalmalefemale = voterCount?.maleCount + voterCount?.femaleCount
+  const other = voterCount?.total - totalmalefemale || 0
 
+  console.log(color)
   useEffect(() => {
     getVillageOption();
   }, []);
@@ -36,6 +38,9 @@ const RedGreenVoter = () => {
     getAllData();
   }, [currentPage, villageId, boothNo, minBoothNo, maxBoothNo, voterName, color]); // Automatically fetch on any state change
 
+  useEffect(() => {
+    getColorOptions()
+  }, [])
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -46,8 +51,9 @@ const RedGreenVoter = () => {
     setter(e.target.value);
   };
 
-  const handleSelectChange = (e) => {
-    setColor(e.target.value);
+  const handleSelectChange = (selectedOption) => {
+    setColor(selectedOption?.value || "");
+    // console.log("Selected color: ", selectedOption?.value); // This will log the selected color
   };
 
   // const handleVillageChange = (e) => {
@@ -60,10 +66,6 @@ const RedGreenVoter = () => {
     setVillageName(selectedOption?.label || "");
   };
 
-  const options = [
-    { label: 'red', value: '1' },
-    { label: 'green', value: '2' },
-  ];
 
   const getVillageOption = () => {
     axios.get(`${base_url}/api/surve/getAllVoterVillages/${id}`)
@@ -105,6 +107,20 @@ const RedGreenVoter = () => {
     }
   };
 
+  const getColorOptions = async () => {
+    try {
+      const response = await axios.get(`${base_url}/get-colour`)
+      // console.log(response.data)
+      const colors = response.data.data?.map((item) => ({
+        label: item.color,
+        value: item.color
+      }));
+      setColorOptions(colors)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const clearFields = () => {
     setVillageId("");
     setVillageName("");
@@ -115,6 +131,7 @@ const RedGreenVoter = () => {
     setColor("");
     setBoothNo("");
     getAllData(); // Fetch all data with no parameters
+    setColor("")
   };
 
   return (
@@ -136,7 +153,7 @@ const RedGreenVoter = () => {
             <span className="font-bold text-lg">199</span>
           </p>
           <div className="grid grid-cols-4 gap-2">
-          <div>
+            <div>
               <label className="form-label" htmlFor="mul_1">
                 गाव
               </label>
@@ -193,14 +210,21 @@ const RedGreenVoter = () => {
               onChange={handleInputChange(setVoterName)} // Set the state on change
             />
 
-            {/* <Select
-              label="रंग"
-              className="w-full"
-              placeholder="सर्व"
-              value={color} // Link the state
-              onChange={handleSelectChange} // Set the state on change
-              options={options}
-            /> */}
+            <div>
+              <label className="form-label" htmlFor="mul_1">
+                रंग
+              </label>
+              <Select
+                placeholder="रंग"
+                name="रंग"
+                value={colorOptions.find(option => option.value === color) || null} // Correct value linking
+                options={colorOptions}
+                onChange={handleSelectChange} // Updated handler
+                className="react-select"
+                classNamePrefix="select"
+              />
+
+            </div>
             <span></span>
             <span></span>
             {/* <span className="mt-10">एकूण मतदार: {voterCount?.total}</span> */}

@@ -159,6 +159,43 @@ export const menuItems = [
     isHide: true,
   },
   {
+    title: "Meta Data ",
+    icon: "heroicons-outline:table",
+    link: "vendor-list",
+    isOpen: true,
+    isHide: true,
+    child: [
+      {
+        childtitle: "जात",
+        childlink: "cast",
+      },
+      {
+        childtitle: "व्यवसाय  ",
+        childlink: "business",
+      },
+      {
+        childtitle: "योजना ",
+        childlink: "yojana",
+      },
+      {
+        childtitle: "रंग",
+        childlink: "color",
+      },
+      {
+        childtitle: "नगर ",
+        childlink: "nagar",
+      },
+      {
+        childtitle: " जवळचे ठिकाण",
+        childlink: "landmark",
+      },
+      {
+        childtitle: " सोसायटी",
+        childlink: "society",
+      },
+    ],
+  },
+  {
     title: "Export PDF",
     icon: "heroicons-outline:table",
     link: "export-pdf",

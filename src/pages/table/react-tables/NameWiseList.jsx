@@ -16,7 +16,7 @@ import AddNewVoter from "./AddNewVoter";
 const NameWiseList = () => {
   const [villageId, setVillageId] = useState("");
   const [villageName, setVillageName] = useState("");
-  const [gathName,setGathName]=useState('')
+  const [gathName, setGathName] = useState('')
   const [boothNo, setBoothNo] = useState("");
   const [srNo, setSrNo] = useState("");
   const [voterName, setVoterName] = useState("");
@@ -25,19 +25,19 @@ const NameWiseList = () => {
   const [relativeName, setRelativeName] = useState("");
   const [allVoter, setAllVoter] = useState([])
   const [voterCount, setVoterCount] = useState()
-  const [gathOption,setGathOption] = useState([])
+  const [gathOption, setGathOption] = useState([])
   const [villageOption, setVillageOption] = useState([]);
   const [boothOption, setBoothOption] = useState([])
   const [currentPage, setCurrentPage] = useState(1);
-const [editModal,setEditModal]=useState()
-const id=localStorage.getItem('_id')
+  const [editModal, setEditModal] = useState()
+  const id = localStorage.getItem('_id')
 
-  const totalmalefemale=voterCount?.maleCount + voterCount?.femaleCount
-  const other=voterCount?.total - totalmalefemale || 0
+  const totalmalefemale = voterCount?.maleCount + voterCount?.femaleCount
+  const other = voterCount?.total - totalmalefemale || 0
 
-const handelEditModal=(val)=>{
-  setEditModal(val)
-}
+  const handelEditModal = (val) => {
+    setEditModal(val)
+  }
 
   const SerachBy = [
     { label: "आडनावानुसार", value: "आडनावानुसार" },
@@ -47,7 +47,7 @@ const handelEditModal=(val)=>{
     { label: "इतर", value: "इतर" },
   ];
 
-  
+
 
   const handleClear = () => {
     setVillageId("");
@@ -58,26 +58,26 @@ const handelEditModal=(val)=>{
     setCardNo("");
     setRelative("");
     setRelativeName("");
-    setCurrentPage(1); 
-    setAllVoter([]); 
-    setVoterCount({}); 
+    setCurrentPage(1);
+    setAllVoter([]);
+    setVoterCount({});
     getAllVoters()
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  
+
   const handleVillageChange = (selectedOption) => {
     setVillageId(selectedOption?.value || "");
     setVillageName(selectedOption?.label || "");
   };
 
-  const getGath= () => {
+  const getGath = () => {
     axios.get(`${base_url}/api/surve/getAllVoterGath/${id}`)
-       .then((resp)=>{
-        const gathName=resp.data.gaths.map((item)=>({
-            label:item.name , value:item._id
+      .then((resp) => {
+        const gathName = resp.data.gaths.map((item) => ({
+          label: item.name, value: item._id
         }))
         setGathOption(gathName)
 
@@ -87,12 +87,12 @@ const handelEditModal=(val)=>{
       })
   }
 
-  const getGan= () => {
+  const getGan = () => {
     axios.get(`${base_url}/api/surve/getAllVoterGan/${id}?gathId=${gathName}`)
-       .then((resp)=>{
-        console.log(resp.data,"//gan")
-        const gathNo=resp.data.Gans.map((item)=>({
-            label:item.name , value:item._id
+      .then((resp) => {
+        console.log(resp.data, "//gan")
+        const gathNo = resp.data.Gans.map((item) => ({
+          label: item.name, value: item._id
         }))
         setGathOption(gathNo)
 
@@ -106,7 +106,7 @@ const handelEditModal=(val)=>{
   const getVillageOption = () => {
     axios.get(`${base_url}/api/surve/getAllVoterVillages/${id}`)
       .then((resp) => {
-       
+
         const villageoption = resp.data.village.map((item) => ({
           label: item.name,
           value: item._id
@@ -121,9 +121,9 @@ const handelEditModal=(val)=>{
 
   const getBoothNo = () => {
     axios.get(`${base_url}/api/surve/getSortBooth/${id}?villageId=${villageId}`)
-       .then((resp)=>{
-        const boothNo=resp.data.booths.map((item)=>({
-            label:item.boothNo , value:item.boothNo
+      .then((resp) => {
+        const boothNo = resp.data.booths.map((item) => ({
+          label: item.boothNo, value: item.boothNo
         }))
         setBoothOption(boothNo)
 
@@ -151,21 +151,21 @@ const handelEditModal=(val)=>{
   useEffect(() => {
     getVillageOption();
     getGath()
-   }, []);
+  }, []);
 
-useEffect(()=>{
-  getGan()
-},[gathName])
+  useEffect(() => {
+    getGan()
+  }, [gathName])
 
 
   useEffect(() => {
     getBoothNo()
- },[villageId])
+  }, [villageId])
 
   useEffect(() => {
     getAllVoters()
-  }, [currentPage,villageName,boothNo,srNo,voterName,cardNo,editModal])
-  
+  }, [currentPage, villageName, boothNo, srNo, voterName, cardNo, editModal])
+
 
   return (
     <div>
@@ -174,11 +174,11 @@ useEffect(()=>{
           <div className="mb-2 flex justify-between">
             <h6 className="font-bold text-[#b91c1c]">नावानुसार यादी</h6>
             <p className=" flex gap-6">
-                            <h6 className="font-bold text-orange-400 text-lg">महिला  :  {voterCount?.femaleCount}</h6>
-                            <h6 className="font-bold text-green-500 text-lg">पुरुष  :  {voterCount?.maleCount}</h6>
-                            <h6 className="font-bold text-blue-400 text-lg">माहित नाही  :  {other}</h6>
-                            <h6 className="font-bold text-[#b91c1c] text-lg">एकूण  :  {voterCount?.total}</h6>
-                        </p>
+              <h6 className="font-bold text-orange-400 text-lg">महिला  :  {voterCount?.femaleCount}</h6>
+              <h6 className="font-bold text-green-500 text-lg">पुरुष  :  {voterCount?.maleCount}</h6>
+              <h6 className="font-bold text-blue-400 text-lg">माहित नाही  :  {other}</h6>
+              <h6 className="font-bold text-[#b91c1c] text-lg">एकूण  :  {voterCount?.total}</h6>
+            </p>
           </div>
           <hr className="py-2" />
           <p className=" text-[#b91c1c]">
@@ -317,19 +317,19 @@ useEffect(()=>{
               onChange={(e) => setRelativeName(e.target.value)}
             /> */}
             <div className="flex justify-end items-center mt-6">
-            
 
-             <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={handleClear}>
-              Clear
+
+              <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={handleClear}>
+                Clear
               </button>
-           
+
             </div>
           </div>
         </Card>
       </div>
       <Card>
         <NameWiseCommonTable Props={allVoter} voterCount={voterCount} currentPage={currentPage}
-          setCurrentPage={setCurrentPage} onPageChange={handlePageChange} handelEditModal={handelEditModal}/>
+          setCurrentPage={setCurrentPage} onPageChange={handlePageChange} handelEditModal={handelEditModal} />
       </Card>
       {/* <AddNewVoter/> */}
     </div>

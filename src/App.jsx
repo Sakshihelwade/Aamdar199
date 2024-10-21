@@ -141,6 +141,13 @@ import AddressWiseTable2 from "./pages/table/react-tables/AddressWiseTable2";
 import AddressWiseTable from "./pages/table/react-tables/AddressWiseTable";
 import ExportData from "./pages/table/Pdf/ExportData";
 import ReportGraph from "./pages/table/ReportGraph/ReportGraph";
+import CastMetadata from "./pages/table/meta-data/CastMetadata";
+import Business from "./pages/table/meta-data/Business";
+import Yojana from "./pages/table/meta-data/Yojana";
+import Color from "./pages/table/meta-data/Color";
+import Nagar from "./pages/table/meta-data/Nagar";
+import Society from "./pages/table/meta-data/Society";
+import Landmark from "./pages/table/meta-data/Landmark";
 
 function App() {
   return (
@@ -285,6 +292,15 @@ function App() {
           <Route path="with-location" element={<WithLocation />} />
           <Route path="surveyed-or-unsurveyed" element={<SurveyedOrUnsurveyed />} />
           <Route path="new-voters" element={<NewVoters />} />
+          {/* Meta data */}
+          <Route path="cast" element={<CastMetadata />} />
+          <Route path="business" element={<Business />} />
+          <Route path="yojana" element={<Yojana />} />
+          <Route path="color" element={<Color />} />
+          <Route path="nagar" element={<Nagar />} />
+          <Route path="society" element={<Society />} />
+          <Route path="landmark" element={<Landmark />} />
+
           {/* export pdf  */}
           <Route path="export-pdf" element={<ExportData/>}/>
           {/* graphical representation  */}

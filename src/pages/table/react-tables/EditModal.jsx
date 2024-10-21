@@ -25,6 +25,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [value, setValue] = useState("A");
   const [value2, setValue2] = useState("C");
   const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
+
   const [selectedRowIndex, setSelectedRowIndex] = useState(null); 
 const [selectedMember, setSelectedMember] = useState(null);
 const [landmarkOption,setLandMarkOption]=useState([])
@@ -35,9 +36,6 @@ const handleSelectRow = (member, index) => {
   setSelectedRowIndex(index); 
   setSelectedMember(member);  
 };
-
-
-
 
 
   const handleChange = (e) => {
@@ -79,6 +77,7 @@ const handleSelectRow = (member, index) => {
     grampanchayatMember: null, 
     apleNaraj: null,           
     tyancheNaraj: null,   
+
   });
 console.log(formData.landmark,"////////////") 
 
@@ -104,6 +103,7 @@ console.log(formData.landmark,"////////////")
       outsideVoters:"",
       bankAcHolder:"",
       bachatGat:"",
+
       grampanchayatMember:"",
       outsideVoters: null,
       bachatGat: null,
@@ -112,6 +112,7 @@ console.log(formData.landmark,"////////////")
       grampanchayatMember: null, 
       apleNaraj: null,           
       tyancheNaraj: null,       
+
     });
     setModal(false);
   };
@@ -164,7 +165,9 @@ console.log(formData.landmark,"////////////")
       .then((resp) => {
         const businessoption = resp.data.data.map((item) => ({
           label: item.business,
+
           value: item.business,
+
         }));
         setBusinessOption(businessoption);
 
@@ -179,7 +182,9 @@ console.log(formData.landmark,"////////////")
       .then((resp) => {
         const colouroption = resp.data.data.map((item) => ({
           label: item.color,
+
           value: item.color,
+
         }));
         setColourOption(colouroption);
 
@@ -271,7 +276,9 @@ const getYojna = () => {
       .then((resp) => {
         const casteOption = resp.data.users.map((item) => ({
           label: item.fullName,
+
           value: item.fullName,
+
         }));
         setKaryakartaOption(casteOption);
 
@@ -337,6 +344,7 @@ const getYojna = () => {
       society: formData.society,
       village: formData.village,
       referenceFrom: formData.sandharbha,
+
       outSideVoter:formData.outsideVoters,
       mahilaBachatGath:formData.bachatGat,
       societyPad:formData.society,
@@ -346,6 +354,7 @@ const getYojna = () => {
       tyncheNaraj:formData.tyancheNaraj,
       namesOfMembers: data,
       nameOfHeadOfFamily:selectedMember
+
     };
     axios
       .post(
@@ -512,7 +521,6 @@ const getYojna = () => {
                   onChange={(e) => handleSelectChange("worker", e.target.value)}
                 />
               </div>
-
               <div className="flex items-center mb-4  pt-2">
         <label htmlFor="outsideVoters" className="w-64">
           बाहेरचे मतदार
