@@ -1,32 +1,75 @@
-import React, { useEffect, useRef, useState } from "react";
-import Select, { components } from "react-select"; import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
+import axios from "axios";
 import { base_url } from "../../../config/base_url";
 import ExportDataTable from "./ExportDataTable";
 import Card from "../../../components/ui/Card";
+import InputGroup from "../../../components/ui/InputGroup"; // Assuming you have this component for input fields
 
 const ExportData = () => {
     const id = localStorage.getItem('_id');
     const [villageId, setVillageId] = useState("");
-    const [villageName, setVillageName] = useState("")
+    const [villageName, setVillageName] = useState("");
     const [villageOption, setVillageOption] = useState([]);
-    const [boothNo, setBoothNo] = useState('')
-    const [boothOption, setBoothOption] = useState([])
-    const [allData, setAllData] = useState([])
-    const [total, setTotal] = useState('')
-    // console.log(boothNo,"booothno")
+    const [boothNo, setBoothNo] = useState("");
+    const [boothOption, setBoothOption] = useState([]);
+    const [allData, setAllData] = useState([]);
+    const [total, setTotal] = useState('');
+    const [srNo, setSrNo] = useState('');
+    const [voterName, setVoterName] = useState('');
+    const [cardNo, setCardNo] = useState('');
+    const [fromList, setFromList] = useState('');
+    const [toList, setToList] = useState('');
+    const [fromAge, setFromAge] = useState('');
+    const [toAge, setToAge] = useState('');
+    const [gender, setGender] = useState('');
+    const [caste, setCaste] = useState('');
+    const [color, setColor] = useState('');
+    const [karyakartaName, setKaryakartaName] = useState('');
+    const [status, setStatus] = useState('');
 
-    // const handleVillageChange = (e) => {
-    //     const selectedValue = e.target.value;
-    //     const selectedVillage = villageOption.find(village => village.value === selectedValue);
+    const SerachBy = [
+        { label: 'पुरुष', value: 'male' },
+        { label: 'महिला', value: 'female' },
+        { label: 'माहित नाही', value: 'unknown' },
+    ];
 
-    //     setVillageId(selectedValue);
-    //     setvillageName(selectedVillage ? selectedVillage.label : "");
-    // };
+    const casteOption = [
+        { label: 'OBC', value: 'OBC' },
+        { label: 'SC', value: 'SC' },
+        { label: 'ST', value: 'ST' },
+        { label: 'General', value: 'General' }
+    ];
+
+    const colorOptions = [
+        { label: 'काळा', value: 'black' },
+        { label: 'पांढरा', value: 'white' },
+        { label: 'इतर', value: 'other' }
+    ];
+
+    const statusOptions = [
+        { label: 'जिवंत', value: 'alive' },
+        { label: 'मृत', value: 'dead' }
+    ];
+
+    const users = [
+        { label: 'User1', value: 'user1' },
+        { label: 'User2', value: 'user2' },
+        { label: 'User3', value: 'user3' }
+    ];
+
     const handleVillageChange = (selectedOption) => {
         setVillageId(selectedOption?.value || "");
         setVillageName(selectedOption?.label || "");
     };
-    // console.log(villageName, "nammeee")
+
+    const handleKaryakartaChange = (selectedOption) => {
+        setKaryakartaName(selectedOption?.value || "");
+    };
+
+    const handleSelectChange = (selectedOption) => {
+        setColor(selectedOption?.value || "");
+    };
 
     const getVillageOption = () => {
         axios.get(`${base_url}/api/surve/getAllVoterVillages/${id}`)
@@ -48,42 +91,52 @@ const ExportData = () => {
                 const boothNo = resp.data.booths.map((item) => ({
                     label: item.boothNo, value: item.boothNo
                 }))
-                setBoothOption(boothNo)
-
+                setBoothOption(boothNo);
             })
             .catch((error) => {
-                console.log(error)
-            })
-    }
+                console.log(error);
+            });
+    };
 
     const getPrintingData = async () => {
         try {
-            const response = await axios.get(`${base_url}/print-Report/${id}?boothNo=${boothNo}`)
-            console.log(response.data, "print Data")
-            setAllData(response.data.voters)
+            const response = await axios.get(`${base_url}/print-Report/${id}?boothNo=${boothNo}`);
+            console.log(response.data, "print Data");
+            setAllData(response.data.voters);
             setTotal(response.data.voters.length);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
     const clearFields = () => {
         setVillageId("");
         setBoothNo("");
-        setAllData([])
-
+        setAllData([]);
+        setSrNo('');
+        setVoterName('');
+        setCardNo('');
+        setFromList('');
+        setToList('');
+        setFromAge('');
+        setToAge('');
+        setGender('');
+        setCaste('');
+        setColor('');
+        setKaryakartaName('');
+        setStatus('');
     };
-
 
     useEffect(() => {
         getVillageOption();
-    }, [])
+    }, []);
 
     useEffect(() => {
-        getBoothNo()
+        getBoothNo();
     }, [villageId]);
 
     useEffect(() => {
-        getPrintingData()
+        getPrintingData();
     }, [boothNo]);
 
     return (
@@ -93,22 +146,15 @@ const ExportData = () => {
                     <div className="mb-2 flex justify-between">
                         <h6 className="font-bold text-[#b91c1c]">Print PDF</h6>
                         <div className="flex gap-6">
-                            {/* <h6 className="font-bold text-orange-400 text-lg">महिला:</h6>
-                            <h6 className="font-bold text-green-500 text-lg">पुरुष:</h6>
-                            <h6 className="font-bold text-blue-400 text-lg">माहित नाही:</h6> */}
-                            <h6 className="font-bold text-[#b91c1c] text-lg">एकूण:{total}</h6>
+                            <h6 className="font-bold text-[#b91c1c] text-lg">एकूण: {total}</h6>
                         </div>
                     </div>
                     <hr className="mb-3" />
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-5 gap-2">
                         <div>
-                            <label className="form-label" htmlFor="mul_1">
-                                गाव
-                            </label>
+                            <label className="form-label">गाव</label>
                             <Select
-                                // isClearable={true}
                                 placeholder="गाव"
-                                name="गाव"
                                 value={villageOption.find(option => option.value === villageId) || null}
                                 options={villageOption}
                                 onChange={handleVillageChange}
@@ -118,13 +164,9 @@ const ExportData = () => {
                         </div>
 
                         <div>
-                            <label className="form-label" htmlFor="mul_1">
-                                भाग/बूथ नं
-                            </label>
+                            <label className="form-label">भाग/बूथ नं</label>
                             <Select
-                                // isClearable={true}
                                 placeholder="भाग/बूथ नं"
-                                name="भाग/बूथ नं"
                                 value={boothOption.find(option => option.value === boothNo) || null}
                                 options={boothOption}
                                 onChange={(selectedOption) => setBoothNo(selectedOption?.value || null)}
@@ -132,22 +174,134 @@ const ExportData = () => {
                                 classNamePrefix="select"
                             />
                         </div>
-                        <div className="flex justify-end gap-4 items-center mt-1">
+
+                        <InputGroup
+                            type="text"
+                            label="अ.क्र."
+                            placeholder="अ.क्र."
+                            value={srNo}
+                            onChange={(e) => setSrNo(e.target.value)}
+                        />
+
+                        <InputGroup
+                            type="text"
+                            label="मतदाराचे नाव"
+                            placeholder="मतदाराचे नाव"
+                            value={voterName}
+                            onChange={(e) => setVoterName(e.target.value)}
+                        />
+
+                        <InputGroup
+                            type="text"
+                            label="EPIC/कार्ड नं"
+                            placeholder="EPIC/कार्ड नं"
+                            value={cardNo}
+                            onChange={(e) => setCardNo(e.target.value)}
+                        />
+
+                        <InputGroup
+                            type="text"
+                            label="यादी नं. पासून"
+                            placeholder="यादी नं. पासून"
+                            value={fromList}
+                            onChange={(e) => setFromList(e.target.value)}
+                        />
+
+                        <InputGroup
+                            type="text"
+                            label="यादी नं. पर्यंत"
+                            placeholder="यादी नं. पर्यंत"
+                            value={toList}
+                            onChange={(e) => setToList(e.target.value)}
+                        />
+
+                        <InputGroup
+                            type="text"
+                            label="वयापासून"
+                            placeholder="वयापासून"
+                            value={fromAge}
+                            onChange={(e) => setFromAge(e.target.value)}
+                        />
+
+                        <InputGroup
+                            type="text"
+                            label="वयापर्यंत"
+                            placeholder="वयापर्यंत"
+                            value={toAge}
+                            onChange={(e) => setToAge(e.target.value)}
+                        />
+
+                        <div>
+                            <label className="form-label">लिंग</label>
+                            <Select
+                                placeholder="लिंग"
+                                value={SerachBy.find(option => option.value === gender) || null}
+                                options={SerachBy}
+                                onChange={(selectedOption) => setGender(selectedOption?.value || null)}
+                                className="react-select"
+                                classNamePrefix="select"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="form-label">जात</label>
+                            <Select
+                                placeholder="जात"
+                                value={casteOption.find(option => option.value === caste) || null}
+                                options={casteOption}
+                                onChange={(selectedOption) => setCaste(selectedOption?.value || null)}
+                                className="react-select"
+                                classNamePrefix="select"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="form-label">कलर</label>
+                            <Select
+                                placeholder="कलर"
+                                value={colorOptions.find(option => option.value === color) || null}
+                                options={colorOptions}
+                                onChange={handleSelectChange}
+                                className="react-select"
+                                classNamePrefix="select"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="form-label">कायकर्ता नाव</label>
+                            <Select
+                                placeholder="कायकर्ता नाव"
+                                value={users.find(option => option.value === karyakartaName) || null}
+                                options={users}
+                                onChange={handleKaryakartaChange}
+                                className="react-select"
+                                classNamePrefix="select"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="form-label">स्थिती</label>
+                            <Select
+                                placeholder="स्थिती"
+                                value={statusOptions.find(option => option.value === status) || null}
+                                options={statusOptions}
+                                onChange={(selectedOption) => setStatus(selectedOption?.value || null)}
+                                className="react-select"
+                                classNamePrefix="select"
+                            />
+                        </div>
+                        <div className="flex justify-end items-center mt-6">
                             <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={clearFields}>
-                                क्लियर करा
-                            </button>
-                            <button className="bg-[#1B59F8] text-white py-2 px-10 my-7 rounded-md" onClick={() => window.print()}>
-                                Print
+                            क्लियर करा
                             </button>
                         </div>
                     </div>
                 </Card>
             </div>
 
-
-            <Card >
-                <ExportDataTable props={allData} boothNo={boothNo} villageName={villageName} total={total}/>
-            </Card>
+            <div>
+                <ExportDataTable data={allData} />
+            </div>
         </div>
     );
 };

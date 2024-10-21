@@ -8,30 +8,36 @@ import axios from "axios";
 import AddNewVoter from "./AddNewVoter";
 import { toast } from "react-toastify";
 import AddFamilyMember from "./AddFamilyMember";
+import Radio from "../../../components/ui/Radio";
 
 const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   //  const FamilyMember = selectedRowData?.namesOfMembers || [];
-   const [selectedFamily,setSelectedFamily]=useState([])
+  const [selectedFamily, setSelectedFamily] = useState([])
   const token = localStorage.getItem("token");
   const [modal, setModal] = useState(false);
-  const [addFamilyModal,setAddFamilyModal]=useState(false)
-  const [businessOption,setBusinessOption]=useState([])
-  const [casteOption,setCasteOption]=useState([])
-  const [karyakartaOption,setKaryakartaOption]=useState([])
-  const [colourOption,setColourOption]=useState([])
-  const [data,setData]=useState([])
-const id=localStorage.getItem('_id')
-const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
-console.log(selectedFamily)
+  const [addFamilyModal, setAddFamilyModal] = useState(false)
+  const [businessOption, setBusinessOption] = useState([])
+  const [casteOption, setCasteOption] = useState([])
+  const [karyakartaOption, setKaryakartaOption] = useState([])
+  const [colourOption, setColourOption] = useState([])
+  const [data, setData] = useState([])
+  const id = localStorage.getItem('_id')
+  const [value, setValue] = useState("A");
+  const [value2, setValue2] = useState("C");
+  const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
+  console.log(selectedFamily)
 
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
 
-useEffect(() => {
-  const data = selectedFamily?.map((item) => ({
-    name: item.name,
-    id: item._id,
-  })) || []; 
-  setData(data);
-}, [selectedFamily]);
+  useEffect(() => {
+    const data = selectedFamily?.map((item) => ({
+      name: item.name,
+      id: item._id,
+    })) || [];
+    setData(data);
+  }, [selectedFamily]);
 
 
   const [formData, setFormData] = useState({
@@ -52,6 +58,10 @@ useEffect(() => {
     color: "",
     dateOfBirth: "",
     sandharbha: "",
+    outsideVoters:"",
+    bankAcHolder:"",
+    bachatGat:"",
+    grampanchayatMember:""
   });
 
   const handleClear = () => {
@@ -73,12 +83,16 @@ useEffect(() => {
       color: "",
       dateOfBirth: "",
       sandharbha: "",
+      outsideVoters:"",
+      bankAcHolder:"",
+      bachatGat:"",
+      grampanchayatMember:""
     });
-    setModal(false); 
+    setModal(false);
   };
 
-  
-  const handelSelectedFamily=(val)=>{
+
+  const handelSelectedFamily = (val) => {
     setSelectedFamily(val)
   }
 
@@ -86,9 +100,9 @@ useEffect(() => {
     setModal(value);
   };
 
-const handleFamilyModal = (val) => {
-  setAddFamilyModal(val)
-}
+  const handleFamilyModal = (val) => {
+    setAddFamilyModal(val)
+  }
 
   const [villageOptions, setVillageOptions] = useState([]);
 
@@ -120,65 +134,65 @@ const handleFamilyModal = (val) => {
     }
   };
 
-  const getBusinessOption= ()=>{
+  const getBusinessOption = () => {
     axios.get(`${base_url}/get-BusinessMeta`)
-    .then((resp)=>{
-      const businessoption = resp.data.data.map((item) => ({
-        label: item.business,
-        value: item._id,
-      }));
-      setBusinessOption(businessoption);
-     
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
+      .then((resp) => {
+        const businessoption = resp.data.data.map((item) => ({
+          label: item.business,
+          value: item._id,
+        }));
+        setBusinessOption(businessoption);
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
-  const getColourOption= ()=>{
+  const getColourOption = () => {
     axios.get(`${base_url}/get-colour`)
-    .then((resp)=>{
-      const colouroption = resp.data.data.map((item) => ({
-        label: item.color,
-        value: item._id,
-      }));
-      setColourOption(colouroption);
-     
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
+      .then((resp) => {
+        const colouroption = resp.data.data.map((item) => ({
+          label: item.color,
+          value: item._id,
+        }));
+        setColourOption(colouroption);
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
-  const getCasteOption=()=>{
+  const getCasteOption = () => {
     axios.get(`${base_url}/getCastMeta`)
-    .then((resp)=>{
-      const casteOption = resp.data.data.map((item) => ({
-        label: item.castname,
-        value: item._id,
-      }));
-      setCasteOption(casteOption);
-     
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
+      .then((resp) => {
+        const casteOption = resp.data.data.map((item) => ({
+          label: item.castname,
+          value: item._id,
+        }));
+        setCasteOption(casteOption);
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
   }
 
-  const getKaryakartaOption=()=>{
+  const getKaryakartaOption = () => {
     axios.get(`${base_url}/api/get-All-karykarte`)
-    .then((resp)=>{
-      const casteOption = resp.data.users.map((item) => ({
-        label: item.fullName,
-        value: item._id,
-      }));
-      setKaryakartaOption(casteOption);
-   
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
+      .then((resp) => {
+        const casteOption = resp.data.users.map((item) => ({
+          label: item.fullName,
+          value: item._id,
+        }));
+        setKaryakartaOption(casteOption);
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   useEffect(() => {
@@ -188,7 +202,7 @@ const handleFamilyModal = (val) => {
     getColourOption()
     getKaryakartaOption()
   }, []);
-  
+
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -231,7 +245,7 @@ const handleFamilyModal = (val) => {
       society: formData.society,
       village: formData.village,
       referenceFrom: formData.sandharbha,
-      namesOfMembers:data
+      namesOfMembers: data
     };
     axios
       .post(
@@ -407,6 +421,64 @@ const handleFamilyModal = (val) => {
                   onChange={(value) => handleSelectChange("worker", value)}
                 />
               </div>
+
+              <div className=" flex">
+                <label htmlFor="" className=" w-28">
+                  बाहेरचे मतदार
+                </label>
+
+                <Select
+                  // label="बाहेरचे मतदार"
+                  className="w-full"
+                  placeholder="बाहेरचे मतदार"
+                  value={formData.outsideVoters}
+                  onChange={(value) => handleSelectChange("outsideVoters", value)}
+                  options={[
+                    { label: "Yes", value: "yes" },
+                    { label: "No", value: "no" },
+                    // Add more options as needed
+                  ]}
+                />
+              </div>
+              
+              <div className=" flex">
+                <label htmlFor="" className=" w-28">
+                  महिला बचत गट
+                </label>
+
+                <Select
+                  // label="महिला बचत गट"
+                  className="w-full"
+                  placeholder="महिला बचत गट"
+                  value={formData.bachatGat}
+                  onChange={(value) => handleSelectChange("bachatGat", value)}
+                  options={[
+                    { label: "Yes", value: "yes" },
+                    { label: "No", value: "no" },
+                    // Add more options as needed
+                  ]}
+                />
+              </div>
+
+              <div className=" flex">
+                <label htmlFor="" className=" w-28">
+                  सोसायटी पदाधिकारी
+                </label>
+
+                <Select
+                  // label="सोसायटी पदाधिकारी"
+                  className="w-full"
+                  placeholder="सोसायटी पदाधिकारी"
+                  value={formData.bachatGat}
+                  onChange={(value) => handleSelectChange("bachatGat", value)}
+                  options={[
+                    { label: "Yes", value: "yes" },
+                    { label: "No", value: "no" },
+                    // Add more options as needed
+                  ]}
+                />
+              </div>
+
               <div
                 className="bg-blue-500 flex justify-center items-center rounded-md py-1 mt-4"
                 onClick={UpdateVoter}
@@ -510,7 +582,7 @@ const handleFamilyModal = (val) => {
 
               <div className=" flex">
                 <label htmlFor="" className=" w-28">
-                व्यवसाय
+                  व्यवसाय
                 </label>
 
                 <Select
@@ -556,6 +628,62 @@ const handleFamilyModal = (val) => {
                   ]}
                 />
               </div>
+
+              <div className=" flex">
+                <label htmlFor="" className=" w-28">
+                  बँक खातेदार
+                </label>
+
+                <Select
+                  // label="बँक खातेदार"
+                  className="w-full"
+                  placeholder="बँक खातेदार"
+                  value={formData.bachatGat}
+                  onChange={(value) => handleSelectChange("bachatGat", value)}
+                  options={[
+                    { label: "Yes", value: "yes" },
+                    { label: "No", value: "no" },
+                    // Add more options as needed
+                  ]}
+                />
+              </div>
+
+              <div className=" flex">
+                <label htmlFor="" className=" w-28">
+                  ग्रामपंचायत पदाधिकारी
+                </label>
+
+                <Select
+                  // label="महिला बचत गट"
+                  className="w-full"
+                  placeholder="ग्रामपंचायत पदाधिकारी"
+                  value={formData.grampanchayatMember}
+                  onChange={(value) => handleSelectChange("grampanchayatMember", value)}
+                  options={[
+                    { label: "Yes", value: "yes" },
+                    { label: "No", value: "no" },
+                    // Add more options as needed
+                  ]}
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Radio
+                  label="आपले नाराज"
+                  name="आपले नाराज"
+                  value="आपले नाराज"
+                  checked={value === "आपले नाराज"}
+                  onChange={handleChange}
+                />
+                <Radio
+                  label="त्यांचे नाराज"
+                  name="त्यांचे नाराज"
+                  value="त्यांचे नाराज"
+                  checked={value === "त्यांचे नाराज"}
+                  onChange={handleChange}
+                />
+              </div>
+
               <div className="bg-blue-500 flex justify-center items-center rounded-md py-1 mt-4">
                 <button className="text-white" onClick={handleClear}>Cancel</button>
               </div>
@@ -570,7 +698,7 @@ const handleFamilyModal = (val) => {
                 >
                   New
                 </button>
-                <button className="bg-blue-500 text-white rounded-md py-1" onClick={()=>setAddFamilyModal(true)}>
+                <button className="bg-blue-500 text-white rounded-md py-1" onClick={() => setAddFamilyModal(true)}>
                   Select Family
                 </button>
               </div>
@@ -635,7 +763,7 @@ const handleFamilyModal = (val) => {
         </div>
       </Modal>
       <AddNewVoter handleActiveModal={handleActiveModal} modal={modal} />
-      <AddFamilyMember handleFamilyModal={handleFamilyModal} addFamilyModal={addFamilyModal} handelSelectedFamily={handelSelectedFamily} familyMember={selectedRowData?.namesOfMembers}/>
+      <AddFamilyMember handleFamilyModal={handleFamilyModal} addFamilyModal={addFamilyModal} handelSelectedFamily={handelSelectedFamily} familyMember={selectedRowData?.namesOfMembers} />
     </div>
   );
 };
