@@ -25,7 +25,20 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [value, setValue] = useState("A");
   const [value2, setValue2] = useState("C");
   const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
-  console.log(selectedFamily)
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null); 
+const [selectedMember, setSelectedMember] = useState(null);
+const [landmarkOption,setLandMarkOption]=useState([])
+const [nagerOption,setNagerOption]=useState([])
+const [societyOption,setSocietyOption]=useState([])
+const [yojnaOption,setYojnaOption]=useState([])
+const handleSelectRow = (member, index) => {
+  setSelectedRowIndex(index); 
+  setSelectedMember(member);  
+};
+
+
+
+
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -52,17 +65,22 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
     society: "",
     village: "",
     marriageAnniversary: "",
+    yojna: "",
     status: "",
     nativeVillage: "",
     occupation: "",
     color: "",
     dateOfBirth: "",
     sandharbha: "",
-    outsideVoters:"",
-    bankAcHolder:"",
-    bachatGat:"",
-    grampanchayatMember:""
+    outsideVoters: null,
+    bachatGat: null,
+    society: null,
+    bankAccountHolder: null,
+    grampanchayatMember: null, 
+    apleNaraj: null,           
+    tyancheNaraj: null,   
   });
+console.log(formData.landmark,"////////////") 
 
   const handleClear = () => {
     setFormData({
@@ -86,7 +104,14 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       outsideVoters:"",
       bankAcHolder:"",
       bachatGat:"",
-      grampanchayatMember:""
+      grampanchayatMember:"",
+      outsideVoters: null,
+      bachatGat: null,
+      society: null,
+      bankAccountHolder: null,
+      grampanchayatMember: null, 
+      apleNaraj: null,           
+      tyancheNaraj: null,       
     });
     setModal(false);
   };
@@ -126,7 +151,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       );
       const options = response.data.village.map((item) => ({
         label: item.name,
-        value: item._id,
+        value: item.name,
       }));
       setVillageOptions(options);
     } catch (error) {
@@ -139,7 +164,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       .then((resp) => {
         const businessoption = resp.data.data.map((item) => ({
           label: item.business,
-          value: item._id,
+          value: item.business,
         }));
         setBusinessOption(businessoption);
 
@@ -154,7 +179,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       .then((resp) => {
         const colouroption = resp.data.data.map((item) => ({
           label: item.color,
-          value: item._id,
+          value: item.color,
         }));
         setColourOption(colouroption);
 
@@ -169,7 +194,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       .then((resp) => {
         const casteOption = resp.data.data.map((item) => ({
           label: item.castname,
-          value: item._id,
+          value: item.castname,
         }));
         setCasteOption(casteOption);
 
@@ -180,12 +205,73 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
 
   }
 
+  const getLandmarkOption = () => {
+    axios.get(`${base_url}/get-landmark`)
+      .then((resp) => {
+        const landmark = resp.data.data.map((item) => ({
+          label: item.name,
+          value: item.name,
+        }));
+        setLandMarkOption(landmark);
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+}
+
+const getNager = () => {
+  axios.get(`${base_url}/get-nager`)
+    .then((resp) => {
+      console.log(resp.data.data)
+      const nager = resp.data.data.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+      setNagerOption(nager);
+
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const getSociety = () => {
+  axios.get(`${base_url}/get-society`)
+    .then((resp) => {
+      const society = resp.data.data.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+      setSocietyOption(society);
+
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const getYojna = () => {
+  axios.get(`${base_url}/api/surve/getYogna`)
+    .then((resp) => {
+      const yojna = resp.data.yogna.map((item) => ({
+        label: item.name,
+        value: item.name,
+      }));
+      setYojnaOption(yojna);
+
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
   const getKaryakartaOption = () => {
     axios.get(`${base_url}/api/get-All-karykarte`)
       .then((resp) => {
         const casteOption = resp.data.users.map((item) => ({
           label: item.fullName,
-          value: item._id,
+          value: item.fullName,
         }));
         setKaryakartaOption(casteOption);
 
@@ -196,6 +282,10 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   }
 
   useEffect(() => {
+    getLandmarkOption()
+    getNager()
+    getYojna()
+    getSociety()
     getVillageOptions();
     getBusinessOption()
     getCasteOption()
@@ -212,12 +302,14 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
     }));
   };
 
-  const handleSelectChange = (id, value) => {
-    setFormData((prevState) => ({
+  const handleSelectChange = (val,val2) => {
+    console.log(val2,val)
+   setFormData((prevState) => ({
       ...prevState,
-      [id]: value,
+      [val]: val2, 
     }));
   };
+
 
   const handleDateChange = (id, date) => {
     setFormData((prevState) => ({
@@ -245,7 +337,15 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       society: formData.society,
       village: formData.village,
       referenceFrom: formData.sandharbha,
-      namesOfMembers: data
+      outSideVoter:formData.outsideVoters,
+      mahilaBachatGath:formData.bachatGat,
+      societyPad:formData.society,
+      voterWithBankAc:formData.bankAccountHolder,
+      panchayatPad:formData.grampanchayatMember,
+      apleNaraj:formData.apleNaraj,
+      tyncheNaraj:formData.tyancheNaraj,
+      namesOfMembers: data,
+      nameOfHeadOfFamily:selectedMember
     };
     axios
       .post(
@@ -299,23 +399,18 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 />
               </div>
 
-              <div className=" flex w-full">
-                <label htmlFor="" className=" w-28">
-                  लँडमार्क
-                </label>
-                <Select
-                  // label="लँडमार्क"
-                  className=" w-full"
-                  placeholder="लँडमार्क"
-                  value={formData.landmark}
-                  onChange={(value) => handleSelectChange("landmark", value)}
-                  options={[
-                    { label: "Option 1", value: "option1" },
-                    { label: "Option 2", value: "option2" },
-                    // Add more options as needed
-                  ]}
-                />
-              </div>
+<div className="flex w-full mb-4">
+              <label htmlFor="landmark" className="w-28">
+                लँडमार्क
+              </label>
+              <Select
+                className="w-full"
+                placeholder="लँडमार्क"
+                value={formData.landmark} 
+                onChange={(e) => handleSelectChange("landmark", e.target.value)}
+                options={landmarkOption} 
+              />
+            </div>
 
               <div className=" flex ">
                 <label htmlFor="" className=" w-28">
@@ -327,12 +422,8 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   className="w-full"
                   placeholder="नगर"
                   value={formData.city}
-                  onChange={(value) => handleSelectChange("city", value)}
-                  options={[
-                    { label: "City 1", value: "city1" },
-                    { label: "City 2", value: "city2" },
-                    // Add more options as needed
-                  ]}
+                  onChange={(e) => handleSelectChange("city", e.target.value)}
+                  options={nagerOption}
                 />
               </div>
               <div className=" flex">
@@ -388,7 +479,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   placeholder="जात"
                   options={casteOption}
                   value={formData.caste}
-                  onChange={(value) => handleSelectChange("caste", value)}
+                  onChange={(e) => handleSelectChange("caste", e.target.value)}
                 />
               </div>
 
@@ -403,7 +494,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   placeholder="घराचा प्रकार"
                   options={homeTypeOptions}
                   value={formData.houseType}
-                  onChange={(value) => handleSelectChange("houseType", value)}
+                  onChange={(e) => handleSelectChange("houseType", e.target.value)}
                 />
               </div>
 
@@ -418,66 +509,129 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   placeholder="कार्यकर्ता"
                   options={karyakartaOption}
                   value={formData.worker}
-                  onChange={(value) => handleSelectChange("worker", value)}
+                  onChange={(e) => handleSelectChange("worker", e.target.value)}
                 />
               </div>
 
-              <div className=" flex">
-                <label htmlFor="" className=" w-28">
-                  बाहेरचे मतदार
-                </label>
+              <div className="flex items-center mb-4  pt-2">
+        <label htmlFor="outsideVoters" className="w-64">
+          बाहेरचे मतदार
+        </label>
+        <div className="w-full">
+          <label className="inline-flex items-center mr-4">
+            <input
+              type="radio"
+              name="outsideVoters"
+              value={true}
+              checked={formData.outsideVoters === true}
+              onChange={() => handleSelectChange("outsideVoters", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="outsideVoters"
+              value={false}
+              checked={formData.outsideVoters === false}
+              onChange={() => handleSelectChange("outsideVoters", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+      </div>
 
-                <Select
-                  // label="बाहेरचे मतदार"
-                  className="w-full"
-                  placeholder="बाहेरचे मतदार"
-                  value={formData.outsideVoters}
-                  onChange={(value) => handleSelectChange("outsideVoters", value)}
-                  options={[
-                    { label: "Yes", value: "yes" },
-                    { label: "No", value: "no" },
-                    // Add more options as needed
-                  ]}
-                />
-              </div>
-              
-              <div className=" flex">
-                <label htmlFor="" className=" w-28">
-                  महिला बचत गट
-                </label>
+      <div className="flex items-center mb-4 pt-2">
+        <label htmlFor="bachatGat" className="w-64">
+          महिला बचत गट
+        </label>
+        <div className="w-full">
+          <label className="inline-flex items-center mr-4">
+            <input
+              type="radio"
+              name="bachatGat"
+              value={true}
+              checked={formData.bachatGat === true}
+              onChange={() => handleSelectChange("bachatGat", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="bachatGat"
+              value={false}
+              checked={formData.bachatGat === false}
+              onChange={() => handleSelectChange("bachatGat", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+      </div>
 
-                <Select
-                  // label="महिला बचत गट"
-                  className="w-full"
-                  placeholder="महिला बचत गट"
-                  value={formData.bachatGat}
-                  onChange={(value) => handleSelectChange("bachatGat", value)}
-                  options={[
-                    { label: "Yes", value: "yes" },
-                    { label: "No", value: "no" },
-                    // Add more options as needed
-                  ]}
-                />
-              </div>
+      <div className="flex items-center mb-4 pt-2">
+        <label htmlFor="society" className="w-64">
+          सोसायटी पदाधिकारी
+        </label>
+        <div className="w-full">
+          <label className="inline-flex items-center mr-4">
+            <input
+              type="radio"
+              name="society"
+              value={true}
+              checked={formData.society === true}
+              onChange={() => handleSelectChange("society", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="society"
+              value={false}
+              checked={formData.society === false}
+              onChange={() => handleSelectChange("society", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+      </div>
 
-              <div className=" flex">
-                <label htmlFor="" className=" w-28">
-                  सोसायटी पदाधिकारी
-                </label>
-
-                <Select
-                  // label="सोसायटी पदाधिकारी"
-                  className="w-full"
-                  placeholder="सोसायटी पदाधिकारी"
-                  value={formData.bachatGat}
-                  onChange={(value) => handleSelectChange("bachatGat", value)}
-                  options={[
-                    { label: "Yes", value: "yes" },
-                    { label: "No", value: "no" },
-                    // Add more options as needed
-                  ]}
-                />
-              </div>
+      <div className="flex items-center mb-4 pt-2">
+        <label htmlFor="bankAccountHolder" className="w-64">
+          बँक खातेदार
+        </label>
+        <div className="w-full">
+          <label className="inline-flex items-center mr-4">
+            <input
+              type="radio"
+              name="bankAccountHolder"
+              value={true}
+              checked={formData.bankAccountHolder === true}
+              onChange={() => handleSelectChange("bankAccountHolder", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="bankAccountHolder"
+              value={false}
+              checked={formData.bankAccountHolder === false}
+              onChange={() => handleSelectChange("bankAccountHolder", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+      </div>
 
               <div
                 className="bg-blue-500 flex justify-center items-center rounded-md py-1 mt-4"
@@ -499,12 +653,8 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   className="w-full"
                   placeholder="सोसायटी"
                   value={formData.society}
-                  onChange={(value) => handleSelectChange("society", value)}
-                  options={[
-                    { label: "Society 1", value: "society1" },
-                    { label: "Society 2", value: "society2" },
-                    // Add more options as needed
-                  ]}
+                  onChange={(e) => handleSelectChange("society", e.target.value)}
+                  options={societyOption}
                 />
               </div>
 
@@ -519,7 +669,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   placeholder="गाव"
                   value={formData.village}
                   options={villageOptions}
-                  onChange={(value) => handleSelectChange("village", value)}
+                  onChange={(e) => handleSelectChange("village", e.target.value)}
                 />
               </div>
               <div className="pt-1 pb-1">Detail Address</div>
@@ -549,7 +699,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   placeholder="जिवंत/ मृत"
                   options={aliveOptions}
                   value={formData.status}
-                  onChange={(value) => handleSelectChange("status", value)}
+                  onChange={(e) => handleSelectChange("status", e.target.value)}
                 />
               </div>
 
@@ -590,7 +740,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   className="w-full"
                   placeholder="व्यवसाय"
                   value={formData.occupation}
-                  onChange={(value) => handleSelectChange("occupation", value)}
+                  onChange={(e) => handleSelectChange("occupation", e.target.value)}
                   options={businessOption}
                 />
               </div>
@@ -605,7 +755,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   className="w-full"
                   placeholder="रंग"
                   value={formData.color}
-                  onChange={(value) => handleSelectChange("color", value)}
+                  onChange={(e) => handleSelectChange("color", e.target.value)}
                   options={colourOption}
                 />
               </div>
@@ -620,7 +770,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   className="w-full"
                   placeholder="संदर्भ"
                   value={formData.sandharbha}
-                  onChange={(value) => handleSelectChange("sandharbha", value)}
+                  onChange={(e) => handleSelectChange("sandharbha", e.target.value)}
                   options={[
                     { label: "Reference 1", value: "reference1" },
                     { label: "Reference 2", value: "reference2" },
@@ -629,60 +779,106 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 />
               </div>
 
-              <div className=" flex">
-                <label htmlFor="" className=" w-28">
-                  बँक खातेदार
-                </label>
+              <div className="flex mb-4">
+        <label htmlFor="" className="w-28">
+          योजना
+        </label>
+        <Select
+          className="w-full"
+          placeholder="योजना"
+          value={formData.yojna}
+          onChange={(e) => handleSelectChange("yojna", e.target.value)}
+          options={yojnaOption}
+        />
+      </div>
 
-                <Select
-                  // label="बँक खातेदार"
-                  className="w-full"
-                  placeholder="बँक खातेदार"
-                  value={formData.bachatGat}
-                  onChange={(value) => handleSelectChange("bachatGat", value)}
-                  options={[
-                    { label: "Yes", value: "yes" },
-                    { label: "No", value: "no" },
-                    // Add more options as needed
-                  ]}
-                />
-              </div>
+   
+              <div className="flex items-center mb-4">
+        <label htmlFor="grampanchayatMember" className="w-64">
+          ग्रामपंचायत पदाधिकारी
+        </label>
+        <div className="w-full">
+          <label className="inline-flex items-center mr-4">
+            <input
+              type="radio"
+              name="grampanchayatMember"
+              value={true}
+              checked={formData.grampanchayatMember === true}
+              onChange={() => handleSelectChange("grampanchayatMember", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="grampanchayatMember"
+              value={false}
+              checked={formData.grampanchayatMember === false}
+              onChange={() => handleSelectChange("grampanchayatMember", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+      </div>
 
-              <div className=" flex">
-                <label htmlFor="" className=" w-28">
-                  ग्रामपंचायत पदाधिकारी
-                </label>
+      <div className="flex items-center mb-4">
+        <label className="w-64">आपले नाराज</label>
+        <div className="w-full flex gap-4">
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="apleNaraj"
+              value={true}
+              checked={formData.apleNaraj === true}
+              onChange={() => handleSelectChange("apleNaraj", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="apleNaraj"
+              value={false}
+              checked={formData.apleNaraj === false}
+              onChange={() => handleSelectChange("apleNaraj", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+      </div>
 
-                <Select
-                  // label="महिला बचत गट"
-                  className="w-full"
-                  placeholder="ग्रामपंचायत पदाधिकारी"
-                  value={formData.grampanchayatMember}
-                  onChange={(value) => handleSelectChange("grampanchayatMember", value)}
-                  options={[
-                    { label: "Yes", value: "yes" },
-                    { label: "No", value: "no" },
-                    // Add more options as needed
-                  ]}
-                />
-              </div>
+      <div className="flex items-center mb-4">
+        <label className="w-64">त्यांचे नाराज</label>
+        <div className="w-full flex gap-4">
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="tyancheNaraj"
+              value={true}
+              checked={formData.tyancheNaraj === true}
+              onChange={() => handleSelectChange("tyancheNaraj", true)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">आहे</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="tyancheNaraj"
+              value={false}
+              checked={formData.tyancheNaraj === false}
+              onChange={() => handleSelectChange("tyancheNaraj", false)}
+              className="form-radio text-blue-500"
+            />
+            <span className="ml-2">नाही</span>
+          </label>
+        </div>
+        </div>
 
-              <div className="flex gap-2">
-                <Radio
-                  label="आपले नाराज"
-                  name="आपले नाराज"
-                  value="आपले नाराज"
-                  checked={value === "आपले नाराज"}
-                  onChange={handleChange}
-                />
-                <Radio
-                  label="त्यांचे नाराज"
-                  name="त्यांचे नाराज"
-                  value="त्यांचे नाराज"
-                  checked={value === "त्यांचे नाराज"}
-                  onChange={handleChange}
-                />
-              </div>
 
               <div className="bg-blue-500 flex justify-center items-center rounded-md py-1 mt-4">
                 <button className="text-white" onClick={handleClear}>Cancel</button>
@@ -702,62 +898,74 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   Select Family
                 </button>
               </div>
-              <div className="mt-5 border h-[29rem] overflow-y-auto overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        नाव
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        मोबाईल नं.
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        जन्मतारीख
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        आधार
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        अ क्र.
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        वय
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        लिंग
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {FamilyMember.map((member, index) => (
-                      <tr key={index}>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.name}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.MOBILE_NO}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.dateOfBirth}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.aadhar}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.serialNo}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.age}
-                        </td>
-                        <td className="px-6 py-2 whitespace-nowrap">
-                          {member.gender}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <div className="mt-5 border h-[41rem] overflow-y-auto overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Family Head
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              नाव
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              मोबाईल नं.
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              जन्मतारीख
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              आधार
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              अ क्र.
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              वय
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              लिंग
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {FamilyMember.map((member, index) => (
+            <tr key={index}>
+              <td className="px-6 py-2 whitespace-nowrap">
+                <input
+                  type="radio"
+                  name="select-row"
+                  checked={selectedRowIndex === index} 
+                  onChange={() => handleSelectRow(member, index)} 
+                />
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.name}
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.MOBILE_NO}
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.dateOfBirth}
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.aadhar}
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.serialNo}
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.age}
+              </td>
+              <td className="px-6 py-2 whitespace-nowrap">
+                {member.gender}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+    </div>
             </div>
           </div>
         </div>
