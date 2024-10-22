@@ -8,10 +8,8 @@ import axios from "axios";
 import AddNewVoter from "./AddNewVoter";
 import { toast } from "react-toastify";
 import AddFamilyMember from "./AddFamilyMember";
-import Radio from "../../../components/ui/Radio";
 
 const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
-  //  const FamilyMember = selectedRowData?.namesOfMembers || [];
   const [selectedFamily, setSelectedFamily] = useState([])
   const token = localStorage.getItem("token");
   const [modal, setModal] = useState(false);
@@ -22,25 +20,30 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [colourOption, setColourOption] = useState([])
   const [data, setData] = useState([])
   const id = localStorage.getItem('_id')
-  const [value, setValue] = useState("A");
-  const [value2, setValue2] = useState("C");
+
   const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
 
-  const [selectedRowIndex, setSelectedRowIndex] = useState(null); 
-const [selectedMember, setSelectedMember] = useState(null);
 const [landmarkOption,setLandMarkOption]=useState([])
 const [nagerOption,setNagerOption]=useState([])
 const [societyOption,setSocietyOption]=useState([])
 const [yojnaOption,setYojnaOption]=useState([])
-const handleSelectRow = (member, index) => {
-  setSelectedRowIndex(index); 
-  setSelectedMember(member);  
+
+
+const [selectedRow, setSelectedRow] = useState(null); 
+
+const HeadOfFamily = {
+  id: selectedRow?._id,
+  name: selectedRow?.name
 };
-
-
-  const handleChange = (e) => {
-    setValue(e.target.value);
+  const handleSelectRow = (member) => {
+   
+    if (selectedRow && selectedRow === member) {
+      setSelectedRow(null); 
+    } else {
+      setSelectedRow(member); 
+    }
   };
+
 
   useEffect(() => {
     const data = selectedFamily?.map((item) => ({
@@ -79,7 +82,6 @@ const handleSelectRow = (member, index) => {
     tyancheNaraj: null,   
 
   });
-console.log(formData.landmark,"////////////") 
 
   const handleClear = () => {
     setFormData({
@@ -291,8 +293,8 @@ const getYojna = () => {
   useEffect(() => {
     getLandmarkOption()
     getNager()
-    getYojna()
     getSociety()
+    getYojna()
     getVillageOptions();
     getBusinessOption()
     getCasteOption()
@@ -310,7 +312,6 @@ const getYojna = () => {
   };
 
   const handleSelectChange = (val,val2) => {
-    console.log(val2,val)
    setFormData((prevState) => ({
       ...prevState,
       [val]: val2, 
@@ -344,7 +345,6 @@ const getYojna = () => {
       society: formData.society,
       village: formData.village,
       referenceFrom: formData.sandharbha,
-
       outSideVoter:formData.outsideVoters,
       mahilaBachatGath:formData.bachatGat,
       societyPad:formData.society,
@@ -352,10 +352,10 @@ const getYojna = () => {
       panchayatPad:formData.grampanchayatMember,
       apleNaraj:formData.apleNaraj,
       tyncheNaraj:formData.tyancheNaraj,
-      namesOfMembers: data,
-      nameOfHeadOfFamily:selectedMember
+      namesOfMembers: FamilyMember,
+      nameOfHeadOfFamily:HeadOfFamily
 
-    };
+   };
     axios
       .post(
         `${base_url}/api/surve/update-voter/${selectedRowData?._id}`,
@@ -369,7 +369,7 @@ const getYojna = () => {
       .then((resp) => {
         ActiveDiactiveModal(false)
         toast.success('Update Sucessfully')
-        console.log(resp);
+        handleClear()
       })
       .catch((error) => {
         console.log(error);
@@ -386,9 +386,19 @@ const getYojna = () => {
         onClose={() => ActiveDiactiveModal(false)}
       >
         <div>
-          <div className="mb-2 bg-blue-200 px-3 py-2 rounded-md">
+          <div className="mb-2 bg-blue-200 px-3 py-2 rounded-md flex justify-between">
+            <div>
             <p className="text-3xl">{selectedRowData?.name}</p>
             <p>{selectedRowData?.address}</p>
+            </div>
+            <div className=" flex justify-center items-center gap-2">
+              <label htmlFor="">Head Of Family</label>
+            <input
+                  type="checkbox"
+                  checked={selectedRow} 
+                  onChange={() => handleSelectRow(selectedRowData)} 
+                />
+            </div>
           </div>
 
           <div className="grid grid-cols-3 gap-10">
@@ -910,10 +920,7 @@ const getYojna = () => {
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Family Head
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               नाव
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -939,40 +946,18 @@ const getYojna = () => {
         <tbody className="bg-white divide-y divide-gray-200">
           {FamilyMember.map((member, index) => (
             <tr key={index}>
-              <td className="px-6 py-2 whitespace-nowrap">
-                <input
-                  type="radio"
-                  name="select-row"
-                  checked={selectedRowIndex === index} 
-                  onChange={() => handleSelectRow(member, index)} 
-                />
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.name}
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.MOBILE_NO}
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.dateOfBirth}
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.aadhar}
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.serialNo}
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.age}
-              </td>
-              <td className="px-6 py-2 whitespace-nowrap">
-                {member.gender}
-              </td>
+              
+              <td className="px-6 py-2 whitespace-nowrap">{member.name}</td>
+              <td className="px-6 py-2 whitespace-nowrap">{member.MOBILE_NO}</td>
+              <td className="px-6 py-2 whitespace-nowrap">{member.dateOfBirth}</td>
+              <td className="px-6 py-2 whitespace-nowrap">{member.aadhar}</td>
+              <td className="px-6 py-2 whitespace-nowrap">{member.serialNo}</td>
+              <td className="px-6 py-2 whitespace-nowrap">{member.age}</td>
+              <td className="px-6 py-2 whitespace-nowrap">{member.gender}</td>
             </tr>
           ))}
         </tbody>
       </table>
-
     </div>
             </div>
           </div>
