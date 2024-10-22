@@ -152,6 +152,13 @@ export const menuItems = [
   //   ],
   // },
   {
+    title: "इतर फिल्टर",
+    icon: "heroicons-outline:table",
+    link: "filter",
+    isOpen: true,
+    isHide: true,
+  },
+  {
     title: "अहवाल",
     icon: "heroicons-outline:table",
     link: "report-graph",

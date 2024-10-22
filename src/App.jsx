@@ -148,6 +148,8 @@ import Color from "./pages/table/meta-data/Color";
 import Nagar from "./pages/table/meta-data/Nagar";
 import Society from "./pages/table/meta-data/Society";
 import Landmark from "./pages/table/meta-data/Landmark";
+import Filter from "./pages/table/react-tables/Filter";
+import FlashScreen from "./pages/table/react-tables/FlashScreen";
 
 function App() {
   return (
@@ -157,10 +159,19 @@ function App() {
           path="/"
           element={
             <Suspense fallback={<Loading />}>
+              <FlashScreen />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<Loading />}>
               <Login />
             </Suspense>
           }
         />
+
         {/* <Route
           path="/login2"
           element={
@@ -250,6 +261,7 @@ function App() {
           }
         /> */}
         <Route path="/*" element={<Layout />}>
+        {/* <Route path="/" element={<FlashScreen />} /> */}
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="vendor-list" element={<TanstackTables />} />
           <Route path="bookings" element={<Bookings />} />
@@ -300,11 +312,12 @@ function App() {
           <Route path="nagar" element={<Nagar />} />
           <Route path="society" element={<Society />} />
           <Route path="landmark" element={<Landmark />} />
-
+          {/* other filter */}
+          <Route path="filter" element={<Filter />} />
           {/* export pdf  */}
-          <Route path="export-pdf" element={<ExportData/>}/>
+          <Route path="export-pdf" element={<ExportData />} />
           {/* graphical representation  */}
-          <Route path="report-graph" element={<ReportGraph/>}/>
+          <Route path="report-graph" element={<ReportGraph />} />
 
           {/* App pages */}
           <Route path="todo" element={<TodoPage />} />

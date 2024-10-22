@@ -225,18 +225,15 @@ const RedGreenVoter = () => {
               />
 
             </div>
-            <span></span>
-            <span></span>
+            {/* <span></span> */}
+            {/* <span></span> */}
             {/* <span className="mt-10">एकूण मतदार: {voterCount?.total}</span> */}
-            <div className="flex justify-end gap-4 items-center mt-6">
+            <div className="flex justify-center gap-4 items-center mt-6">
               {/* <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={getAllData}>
               शोधा
             </button> */}
               <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={clearFields}>
                 क्लियर करा
-              </button>
-              <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" >
-                Export
               </button>
             </div>
           </div>
