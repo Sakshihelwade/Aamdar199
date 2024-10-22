@@ -74,8 +74,8 @@ const Color = ({ title = "रंग" }) => {
                                 type="button"
                                 onClick={() => {
                                     setEditCasteModal(true);
-                                    setCastId(row.cell.row.values._id);
-                                    setCast(row.cell.row.values.color);
+                                    setCastId(row.cell.row.original._id);
+                                    setCast(row.cell.row.original.color);
                                 }}
                             >
                                 <Icon icon="heroicons:pencil-square" />
@@ -87,7 +87,7 @@ const Color = ({ title = "रंग" }) => {
                                 className="action-btn"
                                 type="button"
                                 onClick={() => {
-                                    setCastId(row.cell.row.values._id);
+                                    setCastId(row.cell.row.original._id);
                                     setIsOpen(true);
                                 }}
                             >

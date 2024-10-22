@@ -74,8 +74,8 @@ const Business = ({ title = "व्यवसाय" }) => {
                                 type="button"
                                 onClick={() => {
                                     setEditCasteModal(true);
-                                    setCastId(row.cell.row.values._id);
-                                    setCast(row.cell.row.values.business);
+                                    setCastId(row.cell.row.original._id);
+                                    setCast(row.cell.row.original.business);
                                 }}
                             >
                                 <Icon icon="heroicons:pencil-square" />
@@ -87,7 +87,7 @@ const Business = ({ title = "व्यवसाय" }) => {
                                 className="action-btn"
                                 type="button"
                                 onClick={() => {
-                                    setCastId(row.cell.row.values._id);
+                                    setCastId(row.cell.row.original._id);
                                     setIsOpen(true);
                                 }}
                             >

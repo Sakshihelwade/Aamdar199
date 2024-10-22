@@ -111,6 +111,7 @@ const RegForm = () => {
       role: role,
       fullName: name,
       villages:selectedVillages,
+      loginRights:true,
     };
     
     try {

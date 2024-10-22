@@ -74,8 +74,8 @@ const CastMetadata = ({ title = "जात" }) => {
                                 type="button"
                                 onClick={() => {
                                     setEditCasteModal(true);
-                                    setCastId(row.cell.row.values._id);
-                                    setCast(row.cell.row.values.castname);
+                                    setCastId(row.cell.row.original._id);
+                                    setCast(row.cell.row.original.castname);
                                 }}
                             >
                                 <Icon icon="heroicons:pencil-square" />
@@ -87,7 +87,7 @@ const CastMetadata = ({ title = "जात" }) => {
                                 className="action-btn"
                                 type="button"
                                 onClick={() => {
-                                    setCastId(row.cell.row.values._id);
+                                    setCastId(row.cell.row.original._id);
                                     setIsOpen(true);
                                 }}
                             >

@@ -27,6 +27,9 @@ const ExportData = () => {
     const [color, setColor] = useState('');
     const [karyakartaName, setKaryakartaName] = useState('');
     const [status, setStatus] = useState('');
+    const [casteOption, setCastOption] = useState([])
+    const [colorOptions,setColorOptions]= useState([])
+    const [userOptions, setUserOptions]= useState([])
 
     const SerachBy = [
         { label: 'पुरुष', value: 'male' },
@@ -34,28 +37,9 @@ const ExportData = () => {
         { label: 'माहित नाही', value: 'unknown' },
     ];
 
-    const casteOption = [
-        { label: 'OBC', value: 'OBC' },
-        { label: 'SC', value: 'SC' },
-        { label: 'ST', value: 'ST' },
-        { label: 'General', value: 'General' }
-    ];
-
-    const colorOptions = [
-        { label: 'काळा', value: 'black' },
-        { label: 'पांढरा', value: 'white' },
-        { label: 'इतर', value: 'other' }
-    ];
-
     const statusOptions = [
-        { label: 'जिवंत', value: 'alive' },
-        { label: 'मृत', value: 'dead' }
-    ];
-
-    const users = [
-        { label: 'User1', value: 'user1' },
-        { label: 'User2', value: 'user2' },
-        { label: 'User3', value: 'user3' }
+        { label: 'जिवंत', value: 'Alive' },
+        { label: 'मृत', value: 'Dead' }
     ];
 
     const handleVillageChange = (selectedOption) => {
@@ -74,10 +58,10 @@ const ExportData = () => {
     const getVillageOption = () => {
         axios.get(`${base_url}/api/surve/getAllVoterVillages/${id}`)
             .then((resp) => {
-                const villageOptions = resp.data.village?.map((item) => ({
-                    label: item?.name,
-                    value: item?._id
-                }));
+                // const villageOptions = resp.data.village?.map((item) => ({
+                //     label: item?.name,
+                //     value: item?._id
+                // }));
                 setVillageOption(villageOptions);
             })
             .catch((error) => {
@@ -100,7 +84,7 @@ const ExportData = () => {
 
     const getPrintingData = async () => {
         try {
-            const response = await axios.get(`${base_url}/print-Report/${id}?boothNo=${boothNo}`);
+            const response = await axios.get(`${base_url}/print-Report/${id}?printOut=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&cardNumber=${cardNo}&minBooth=${fromList}&maxBooth=${toList}&minAge=${fromAge}&maxAge=${toAge}&gender=${gender}&caste=${caste}&colour=${color}&aliveOrDead=${status}&`);
             console.log(response.data, "print Data");
             setAllData(response.data.voters);
             setTotal(response.data.voters.length);
@@ -108,6 +92,51 @@ const ExportData = () => {
             console.log(error);
         }
     };
+
+    const getCasteOption = () => {
+        axios.get(`${base_url}/getCastMeta`)
+            .then((resp) => {
+                const casteOption = resp.data.data.map((item) => ({
+                    label: item.castname,
+                    value: item._id,
+                }));
+                setCastOption(casteOption);
+
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const getColor = () => {
+        axios
+            .get(`${base_url}/get-colour`)
+            .then((resp) => {
+                const colors = resp.data.data.map((item) => ({
+                    label: item.color,
+                    value: item._id,
+                }));
+                setColorOptions(colors);
+                console.log(resp.data)
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const getUsers = async () => {
+        try {
+          const response = await axios.get(`${base_url}/api/getAllUser`);
+          console.log(response.data, "responseeeeeeeeee");
+          const users = response.data.users.map((item) => ({
+            label: item.fullName,
+            value: item._id,
+        }));
+          setUserOptions(users)
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     const clearFields = () => {
         setVillageId("");
@@ -137,7 +166,19 @@ const ExportData = () => {
 
     useEffect(() => {
         getPrintingData();
-    }, [boothNo]);
+    }, [boothNo,srNo,voterName,fromList,toList,fromAge,toAge,gender,caste,color,status]);
+
+    useEffect(() => {
+        getCasteOption();
+    }, []);
+
+    useEffect(() => {
+        getColor();
+    }, []);
+    
+    useEffect(() => {
+        getUsers();
+    }, []);
 
     return (
         <div>
@@ -271,8 +312,8 @@ const ExportData = () => {
                             <label className="form-label">कायकर्ता नाव</label>
                             <Select
                                 placeholder="कायकर्ता नाव"
-                                value={users.find(option => option.value === karyakartaName) || null}
-                                options={users}
+                                value={userOptions.find(option => option.value === karyakartaName) || null}
+                                options={userOptions}
                                 onChange={handleKaryakartaChange}
                                 className="react-select"
                                 classNamePrefix="select"
@@ -292,7 +333,7 @@ const ExportData = () => {
                         </div>
                         <div className="flex justify-end items-center mt-6">
                             <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={clearFields}>
-                            क्लियर करा
+                                क्लियर करा
                             </button>
                         </div>
                     </div>
