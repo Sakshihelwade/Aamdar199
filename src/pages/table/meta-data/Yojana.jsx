@@ -42,7 +42,7 @@ const Yojana = ({ title = "योजना" }) => {
 
     const COLUMNS = [
         {
-            Header: "अ.नं.	",
+            Header: "अ.क्र.",
             accessor: "srNo",
             Cell: ({ row }) => {
                 return <span>{row.index + 1}</span>;

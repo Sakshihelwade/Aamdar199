@@ -196,7 +196,7 @@ const NameWiseList = () => {
             </div> */}
             <div className=" flex justify-start items-center mt-6">
               <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={clearFields}>
-                क्लियर करा
+                Clear
               </button>
             </div>
           </div>

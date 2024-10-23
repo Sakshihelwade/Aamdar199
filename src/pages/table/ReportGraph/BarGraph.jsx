@@ -212,7 +212,7 @@ import useRtl from "@/hooks/useRtl";
 import axios from "axios";
 import { base_url } from "../../../config/base_url";
 
-const BarGraph = ({ height = 400, year, village }) => {
+const BarGraph = ({ height = 400, year }) => {
   const [graphData, setGraphData] = useState([]);
   const [party, setParty] = useState([]);
   const [percentage, setPercentage] = useState([]);
@@ -222,13 +222,13 @@ const BarGraph = ({ height = 400, year, village }) => {
   const [isRtl] = useRtl();
 
   const getGraphData = () => {
-    axios.get(`${base_url}/GraphAPI?year=${year}&village=${village}`)
+    axios.get(`${base_url}/GraphAPI?year=${year}`)
       .then((resp) => {
-        const candidates = resp.data[0]?.candidates || []; // Handle case where candidates might be undefined
+        console.log(resp.data.candidate,"///")
+        const candidates = resp.data[0]?.candidate || []; 
         setGraphData(candidates);
         
-        // Extract party names, percentages, and votes
-        const partyNames = candidates.map(candidate => candidate.name);
+        const partyNames = candidates.map(candidate => candidate.party);
         const percentages = candidates.map(candidate => candidate.percentage);
         const votes = candidates.map(candidate => candidate.votes);
         
@@ -245,9 +245,8 @@ const BarGraph = ({ height = 400, year, village }) => {
 
   useEffect(() => {
     getGraphData();
-  }, [village, year]); // API will be called whenever `village` or `year` changes
+  }, [ year]); // API will be called whenever `village` or `year` changes
 
-  // Update series and options based on the data fetched
   const series = [
     {
       name: "एकूण मतदार",
@@ -270,7 +269,7 @@ const BarGraph = ({ height = 400, year, village }) => {
       },
     },
     xaxis: {
-      categories: party.length ? party : ["No Data"], // Handle empty categories
+      categories: party.length ? party.concat() : ["No Data"], // Handle empty categories
       labels: {
         style: {
           colors: isDark ? "#CBD5E1" : "#475569",

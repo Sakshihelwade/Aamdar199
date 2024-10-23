@@ -217,7 +217,7 @@ const JivantMrut = () => {
                 शोधा
               </button> */}
               <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={clearFields}>
-                क्लियर करा
+                Clear
               </button>
             </div>
           </div>

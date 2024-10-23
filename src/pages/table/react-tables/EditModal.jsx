@@ -13,6 +13,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [selectedFamily, setSelectedFamily] = useState([])
   const token = localStorage.getItem("token");
   const [modal, setModal] = useState(false);
+  const [mulgav,setMulgav]=useState('')
   const [addFamilyModal, setAddFamilyModal] = useState(false)
   const [businessOption, setBusinessOption] = useState([])
   const [casteOption, setCasteOption] = useState([])
@@ -20,7 +21,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [colourOption, setColourOption] = useState([])
   const [data, setData] = useState([])
   const id = localStorage.getItem('_id')
-
+// const [FamilyMember,setFamilyMember]=useState( [...(selectedRowData?.namesOfMembers || []), ...data])
   const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
 
 const [landmarkOption,setLandMarkOption]=useState([])
@@ -28,6 +29,7 @@ const [nagerOption,setNagerOption]=useState([])
 const [societyOption,setSocietyOption]=useState([])
 const [yojnaOption,setYojnaOption]=useState([])
 
+console.log(mulgav,"mulgav")
 
 const [selectedRow, setSelectedRow] = useState(null); 
 
@@ -55,6 +57,7 @@ const HeadOfFamily = {
 
 
   const [formData, setFormData] = useState({
+    name:"",
     houseNo: "",
     landmark: "",
     city: "",
@@ -82,9 +85,12 @@ const HeadOfFamily = {
     tyancheNaraj: null,   
 
   });
+console.log(formData.nativeVillage)
+console.log(formData.aadhaarNo)
 
   const handleClear = () => {
     setFormData({
+      name:"",
       houseNo: "",
       landmark: "",
       city: "",
@@ -105,7 +111,7 @@ const HeadOfFamily = {
       outsideVoters:"",
       bankAcHolder:"",
       bachatGat:"",
-
+       
       grampanchayatMember:"",
       outsideVoters: null,
       bachatGat: null,
@@ -114,7 +120,7 @@ const HeadOfFamily = {
       grampanchayatMember: null, 
       apleNaraj: null,           
       tyancheNaraj: null,       
-
+      // setFamilyMember:[]
     });
     setModal(false);
   };
@@ -305,6 +311,7 @@ const getYojna = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
+   
     setFormData((prevState) => ({
       ...prevState,
       [id]: value,
@@ -334,7 +341,7 @@ const getYojna = () => {
       caste: formData.caste,
       weddingAnniversary: formData.marriageAnniversary,
       aliveOrDead: formData.status,
-      nativePlace: formData.nativeVillage,
+      nativePlace: mulgav,
       business: formData.occupation,
       colour: formData.color,
       houseNo: formData.houseNo,
@@ -370,6 +377,7 @@ const getYojna = () => {
         ActiveDiactiveModal(false)
         toast.success('Update Sucessfully')
         handleClear()
+       setMulgav('')
       })
       .catch((error) => {
         console.log(error);
@@ -404,6 +412,23 @@ const getYojna = () => {
           <div className="grid grid-cols-3 gap-10">
             {/* First Column */}
             <div className="col-span-1 space-y-4">
+
+            <div className=" flex">
+                <label htmlFor="" className=" w-20">
+                नाव
+                </label>
+                <InputGroup
+                  type="text"
+                  // label="घर क्र."
+                  id="name"
+                  placeholder="नाव"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+
+
               <div className=" flex">
                 <label htmlFor="" className=" w-20">
                   घर क्र.
@@ -531,7 +556,7 @@ const getYojna = () => {
                   onChange={(e) => handleSelectChange("worker", e.target.value)}
                 />
               </div>
-              <div className="flex items-center mb-4  pt-2">
+              <div className="flex items-center mb-2  pt-2">
         <label htmlFor="outsideVoters" className="w-64">
           बाहेरचे मतदार
         </label>
@@ -561,7 +586,7 @@ const getYojna = () => {
         </div>
       </div>
 
-      <div className="flex items-center mb-4 pt-2">
+      <div className="flex items-center mb-4 pt-0">
         <label htmlFor="bachatGat" className="w-64">
           महिला बचत गट
         </label>
@@ -591,7 +616,7 @@ const getYojna = () => {
         </div>
       </div>
 
-      <div className="flex items-center mb-4 pt-2">
+      <div className="flex items-center mb-4 pt-0">
         <label htmlFor="society" className="w-64">
           सोसायटी पदाधिकारी
         </label>
@@ -621,7 +646,7 @@ const getYojna = () => {
         </div>
       </div>
 
-      <div className="flex items-center mb-4 pt-2">
+      <div className="flex items-center mb-4 pt-0">
         <label htmlFor="bankAccountHolder" className="w-64">
           बँक खातेदार
         </label>
@@ -731,8 +756,8 @@ const getYojna = () => {
                   // label="मुळगाव"
                   id="mulgav"
                   placeholder="मुळगाव"
-                  value={formData.nativeVillage}
-                  onChange={handleInputChange}
+                  value={mulgav}
+                  onChange={(e)=>setMulgav(e.target.value)}
                 />
               </div>
               {/* <Select
@@ -811,7 +836,7 @@ const getYojna = () => {
       </div>
 
    
-              <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4 pt-2 ">
         <label htmlFor="grampanchayatMember" className="w-64">
           ग्रामपंचायत पदाधिकारी
         </label>
@@ -841,7 +866,7 @@ const getYojna = () => {
         </div>
       </div>
 
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-4 pt-3">
         <label className="w-64">आपले नाराज</label>
         <div className="w-full flex gap-4">
           <label className="inline-flex items-center">
@@ -869,7 +894,7 @@ const getYojna = () => {
         </div>
       </div>
 
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-4 pt-2">
         <label className="w-64">त्यांचे नाराज</label>
         <div className="w-full flex gap-4">
           <label className="inline-flex items-center">
@@ -916,7 +941,7 @@ const getYojna = () => {
                   Select Family
                 </button>
               </div>
-              <div className="mt-5 border h-[41rem] overflow-y-auto overflow-x-auto">
+              <div className="mt-5 border h-[43rem] overflow-y-auto overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>

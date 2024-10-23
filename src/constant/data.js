@@ -67,10 +67,10 @@ export const menuItems = [
       //   childtitle: " लग्नाचा वाढदिवस",
       //   childlink: "by-marriage-anniversary-report2",
       // },
-      {
-        childtitle: "पुरवणी संक्षिप्त मतदार",
-        childlink: "by-supplementary",
-      },
+      // {
+      //   childtitle: "पुरवणी संक्षिप्त मतदार",
+      //   childlink: "by-supplementary",
+      // },
       // {
       //   childtitle: "बदललेले पत्त्यानुसार",
       //   childlink: "by-changed-address",
@@ -166,12 +166,16 @@ export const menuItems = [
     isHide: true,
   },
   {
-    title: "Meta Data ",
+    title: "Master Data ",
     icon: "heroicons-outline:table",
     link: "vendor-list",
     isOpen: true,
     isHide: true,
     child: [
+      {
+        childtitle: "कार्यकर्ता",
+        childlink: "New-Karyakarta",
+      },
       {
         childtitle: "जात",
         childlink: "cast",
