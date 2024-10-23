@@ -2,6 +2,7 @@ import React from "react";
 import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
 import useSkin from "@/hooks/useSkin";
+
 const icons = [
   {
     name: "heroicons:academic-cap",
@@ -85,9 +86,6 @@ const icons = [
     name: "heroicons:inbox",
   },
   {
-    name: "heroicons:inbox",
-  },
-  {
     name: "heroicons:information-circle",
   },
   {
@@ -105,24 +103,62 @@ const icons = [
   {
     name: "heroicons:pencil-square",
   },
-  { name: "heroicons:rectangle-stack" },
-  { name: "heroicons:rocket-launch" },
-  { name: "heroicons:window" },
-  { name: "heroicons:wifi" },
-  { name: "heroicons:wallet" },
-  { name: "heroicons:variable" },
-  { name: "heroicons:users" },
-  { name: "heroicons:user-plus" },
-  { name: "heroicons:user-minus" },
-  { name: "heroicons:user-group" },
-  { name: "heroicons:user-circle" },
-  { name: "heroicons:user" },
-  { name: "heroicons:square-2-stack" },
-  { name: "heroicons:shopping-bag" },
-  { name: "heroicons:shield-check" },
-  { name: "heroicons:share" },
-  { name: "heroicons:wrench" },
+  {
+    name: "heroicons:rectangle-stack",
+  },
+  {
+    name: "heroicons:rocket-launch",
+  },
+  {
+    name: "heroicons:window",
+  },
+  {
+    name: "heroicons:wifi",
+  },
+  {
+    name: "heroicons:wallet",
+  },
+  {
+    name: "heroicons:variable",
+  },
+  {
+    name: "heroicons:users",
+  },
+  {
+    name: "heroicons:user-plus",
+  },
+  {
+    name: "heroicons:user-minus",
+  },
+  {
+    name: "heroicons:user-group",
+  },
+  {
+    name: "heroicons:user-circle",
+  },
+  {
+    name: "heroicons:user",
+  },
+  {
+    name: "heroicons:square-2-stack",
+  },
+  {
+    name: "heroicons:shopping-bag",
+  },
+  {
+    name: "heroicons:shield-check",
+  },
+  {
+    name: "heroicons:share",
+  },
+  {
+    name: "heroicons:wrench",
+  },
+  {
+    name: "logos:whatsapp", // WhatsApp icon added
+  },
 ];
+
 const IconPage = () => {
   const [skin] = useSkin();
   return (
@@ -131,13 +167,13 @@ const IconPage = () => {
         <li key={i}>
           <Tooltip placement="top" arrow content={item.name}>
             <div
-              className={`rounded-md bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xl  py-3 px-4 ${
+              className={`rounded-md bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xl py-3 px-4 ${
                 skin === "bordered"
-                  ? " border border-gray-5002 dark:border-slate-700"
+                  ? "border border-gray-5002 dark:border-slate-700"
                   : "shadow-base"
               }`}
             >
-              <Icon icon={item.name} />
+              <Icon icon={item.name} /> {/* Only the icon will render here */}
             </div>
           </Tooltip>
         </li>

@@ -38,7 +38,7 @@ const IndeterminateCheckbox = React.forwardRef(
     }
 );
 
-const Society = ({ title = "समाज" }) => {
+const Society = ({ title = "सोसायटी" }) => {
 
     const COLUMNS = [
         {
@@ -216,7 +216,7 @@ const Society = ({ title = "समाज" }) => {
                 </div>
                 <div>
                     <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={() => stAddCastModal(true)}>
-                    समाज जोडा
+                    सोसायटी जोडा
                     </button>
                 </div>
 
@@ -241,7 +241,7 @@ const Society = ({ title = "समाज" }) => {
 
                 {/* Add cast modal */}
                 <Modal
-                    title="समाज"
+                    title="सोसायटी"
                     activeModal={addCasteModal}
                     className="max-w-xl"
                     // themeClass="bg-[#b91c1c]"
@@ -251,9 +251,9 @@ const Society = ({ title = "समाज" }) => {
                         <div>
                             <Inputgroup
                                 type="text"
-                                label="समाज"
-                                id="समाज"
-                                placeholder="समाज"
+                                label="सोसायटी"
+                                id="सोसायटी"
+                                placeholder="सोसायटी"
                                 value={cast}
                                 onChange={(e) => setCast(e.target.value)}
                             // isClearable={true} // Uncomment if you want to allow clearing the input
@@ -403,9 +403,9 @@ const Society = ({ title = "समाज" }) => {
                     <div>
                         <Inputgroup
                             type="text"
-                            label="समाज"
-                            id="समाज"
-                            placeholder="समाज"
+                            label="सोसायटी"
+                            id="सोसायटी"
+                            placeholder="सोसायटी"
                             value={cast}
                             onChange={(e) => setCast(e.target.value)}
                         // isClearable={true} // Uncomment if you want to allow clearing the input

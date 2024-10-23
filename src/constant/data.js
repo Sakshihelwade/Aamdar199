@@ -207,8 +207,15 @@ export const menuItems = [
     ],
   },
   {
+    title: "",
+    icon: "logos:whatsapp",
+    link: "whatsapp",
+    isOpen: true,
+    isHide: true,
+  },
+  {
     title: "Export PDF",
-    icon: "heroicons-outline:table",
+    icon: "heroicons-outline:rectangle-stack",
     link: "export-pdf",
     isOpen: true,
     isHide: true,

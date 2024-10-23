@@ -5,6 +5,7 @@ import { base_url } from "../../../config/base_url";
 import ExportDataTable from "./ExportDataTable";
 import Card from "../../../components/ui/Card";
 import InputGroup from "../../../components/ui/InputGroup"; // Assuming you have this component for input fields
+import { toast } from "react-toastify";
 
 const ExportData = () => {
     const id = localStorage.getItem('_id');
@@ -92,6 +93,7 @@ const ExportData = () => {
             setTotal(response.data.voters.length);
         } catch (error) {
             console.log(error);
+            toast.error("आपण एका वेळी फक्त 5000 नोंदी छापू शकता.")
         }
     };
 
@@ -168,8 +170,17 @@ const ExportData = () => {
         getBoothNo();
     }, [villageId]);
 
+    const isAnyFieldSelected = () => {
+        return (
+            villageId || boothNo || srNo || voterName || cardNo || fromList || toList ||
+            fromAge || toAge || gender || caste || color || karyakartaName || status
+        );
+    };
+
     useEffect(() => {
-        getPrintingData();
+        if (isAnyFieldSelected()) {
+            getPrintingData();
+        }
     }, [boothNo, srNo, voterName, fromList, toList, fromAge, toAge, gender, caste, color, status, cardNo, villageName]);
 
     useEffect(() => {
