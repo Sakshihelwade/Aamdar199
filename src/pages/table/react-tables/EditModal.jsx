@@ -13,7 +13,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [selectedFamily, setSelectedFamily] = useState([])
   const token = localStorage.getItem("token");
   const [modal, setModal] = useState(false);
-  const [mulgav,setMulgav]=useState('')
+  const [mulgav, setMulgav] = useState('')
   const [addFamilyModal, setAddFamilyModal] = useState(false)
   const [businessOption, setBusinessOption] = useState([])
   const [casteOption, setCasteOption] = useState([])
@@ -21,32 +21,27 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [colourOption, setColourOption] = useState([])
   const [data, setData] = useState([])
   const id = localStorage.getItem('_id')
-// const [FamilyMember,setFamilyMember]=useState( [...(selectedRowData?.namesOfMembers || []), ...data])
+  // const [FamilyMember,setFamilyMember]=useState( [...(selectedRowData?.namesOfMembers || []), ...data])
   const FamilyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
 
-const [landmarkOption,setLandMarkOption]=useState([])
-const [nagerOption,setNagerOption]=useState([])
-const [societyOption,setSocietyOption]=useState([])
-const [yojnaOption,setYojnaOption]=useState([])
+  const [landmarkOption, setLandMarkOption] = useState([])
+  const [nagerOption, setNagerOption] = useState([])
+  const [societyOption, setSocietyOption] = useState([])
+  const [yojnaOption, setYojnaOption] = useState([])
+  console.log(mulgav, "mulgav")
 
-console.log(mulgav,"mulgav")
+  const [isSelected, setIsSelected] = useState(false);
 
-const [selectedRow, setSelectedRow] = useState(null); 
-
-const HeadOfFamily = {
-  id: selectedRow?._id,
-  name: selectedRow?.name
-};
-  const handleSelectRow = (member) => {
-   
-    if (selectedRow && selectedRow === member) {
-      setSelectedRow(null); 
-    } else {
-      setSelectedRow(member); 
-    }
+  const handleSelectRow = () => {
+    setIsSelected((prevState) => !prevState);
   };
 
+  const HeadOfFamily = {
+    isSelected: isSelected
+  };
 
+  // console.log(isSelected, "...........");
+  
   useEffect(() => {
     const data = selectedFamily?.map((item) => ({
       name: item.name,
@@ -57,7 +52,7 @@ const HeadOfFamily = {
 
 
   const [formData, setFormData] = useState({
-    name:"",
+    name: "",
     houseNo: "",
     landmark: "",
     city: "",
@@ -80,17 +75,17 @@ const HeadOfFamily = {
     bachatGat: null,
     society: null,
     bankAccountHolder: null,
-    grampanchayatMember: null, 
-    apleNaraj: null,           
-    tyancheNaraj: null,   
+    grampanchayatMember: null,
+    apleNaraj: null,
+    tyancheNaraj: null,
 
   });
-console.log(formData.nativeVillage)
-console.log(formData.aadhaarNo)
+  console.log(formData.nativeVillage)
+  console.log(formData.aadhaarNo)
 
   const handleClear = () => {
     setFormData({
-      name:"",
+      name: "",
       houseNo: "",
       landmark: "",
       city: "",
@@ -108,18 +103,18 @@ console.log(formData.aadhaarNo)
       color: "",
       dateOfBirth: "",
       sandharbha: "",
-      outsideVoters:"",
-      bankAcHolder:"",
-      bachatGat:"",
-       
-      grampanchayatMember:"",
+      outsideVoters: "",
+      bankAcHolder: "",
+      bachatGat: "",
+
+      grampanchayatMember: "",
       outsideVoters: null,
       bachatGat: null,
       society: null,
       bankAccountHolder: null,
-      grampanchayatMember: null, 
-      apleNaraj: null,           
-      tyancheNaraj: null,       
+      grampanchayatMember: null,
+      apleNaraj: null,
+      tyancheNaraj: null,
       // setFamilyMember:[]
     });
     setModal(false);
@@ -231,53 +226,53 @@ console.log(formData.aadhaarNo)
       .catch((error) => {
         console.log(error)
       })
-}
+  }
 
-const getNager = () => {
-  axios.get(`${base_url}/get-nager`)
-    .then((resp) => {
-      console.log(resp.data.data)
-      const nager = resp.data.data.map((item) => ({
-        label: item.name,
-        value: item.name,
-      }));
-      setNagerOption(nager);
+  const getNager = () => {
+    axios.get(`${base_url}/get-nager`)
+      .then((resp) => {
+        console.log(resp.data.data)
+        const nager = resp.data.data.map((item) => ({
+          label: item.name,
+          value: item.name,
+        }));
+        setNagerOption(nager);
 
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
-const getSociety = () => {
-  axios.get(`${base_url}/get-society`)
-    .then((resp) => {
-      const society = resp.data.data.map((item) => ({
-        label: item.name,
-        value: item.name,
-      }));
-      setSocietyOption(society);
+  const getSociety = () => {
+    axios.get(`${base_url}/get-society`)
+      .then((resp) => {
+        const society = resp.data.data.map((item) => ({
+          label: item.name,
+          value: item.name,
+        }));
+        setSocietyOption(society);
 
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
-const getYojna = () => {
-  axios.get(`${base_url}/api/surve/getYogna`)
-    .then((resp) => {
-      const yojna = resp.data.yogna.map((item) => ({
-        label: item.name,
-        value: item.name,
-      }));
-      setYojnaOption(yojna);
+  const getYojna = () => {
+    axios.get(`${base_url}/api/surve/getYogna`)
+      .then((resp) => {
+        const yojna = resp.data.yogna.map((item) => ({
+          label: item.name,
+          value: item.name,
+        }));
+        setYojnaOption(yojna);
 
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
 
   const getKaryakartaOption = () => {
     axios.get(`${base_url}/api/get-All-karykarte`)
@@ -311,17 +306,17 @@ const getYojna = () => {
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-   
+
     setFormData((prevState) => ({
       ...prevState,
       [id]: value,
     }));
   };
 
-  const handleSelectChange = (val,val2) => {
-   setFormData((prevState) => ({
+  const handleSelectChange = (val, val2) => {
+    setFormData((prevState) => ({
       ...prevState,
-      [val]: val2, 
+      [val]: val2,
     }));
   };
 
@@ -352,17 +347,17 @@ const getYojna = () => {
       society: formData.society,
       village: formData.village,
       referenceFrom: formData.sandharbha,
-      outSideVoter:formData.outsideVoters,
-      mahilaBachatGath:formData.bachatGat,
-      societyPad:formData.society,
-      voterWithBankAc:formData.bankAccountHolder,
-      panchayatPad:formData.grampanchayatMember,
-      apleNaraj:formData.apleNaraj,
-      tyncheNaraj:formData.tyancheNaraj,
+      outSideVoter: formData.outsideVoters,
+      mahilaBachatGath: formData.bachatGat,
+      societyPad: formData.society,
+      voterWithBankAc: formData.bankAccountHolder,
+      panchayatPad: formData.grampanchayatMember,
+      apleNaraj: formData.apleNaraj,
+      tyncheNaraj: formData.tyancheNaraj,
       namesOfMembers: FamilyMember,
-      nameOfHeadOfFamily:HeadOfFamily
+      nameOfHeadOfFamily: HeadOfFamily
 
-   };
+    };
     axios
       .post(
         `${base_url}/api/surve/update-voter/${selectedRowData?._id}`,
@@ -377,7 +372,7 @@ const getYojna = () => {
         ActiveDiactiveModal(false)
         toast.success('Update Sucessfully')
         handleClear()
-       setMulgav('')
+        setMulgav('')
       })
       .catch((error) => {
         console.log(error);
@@ -396,26 +391,30 @@ const getYojna = () => {
         <div>
           <div className="mb-2 bg-blue-200 px-3 py-2 rounded-md flex justify-between">
             <div>
-            <p className="text-3xl">{selectedRowData?.name}</p>
-            <p>{selectedRowData?.address}</p>
+              <p className="text-3xl">{selectedRowData?.name}</p>
+              <p>{selectedRowData?.address}</p>
             </div>
-            <div className=" flex justify-center items-center gap-2">
-              <label htmlFor="">Head Of Family</label>
-            <input
-                  type="checkbox"
-                  checked={selectedRow} 
-                  onChange={() => handleSelectRow(selectedRowData)} 
-                />
+            <div className="flex justify-center items-center gap-2">
+              <label htmlFor="headOfFamilyCheckbox">Head Of Family</label>
+              <input
+                type="checkbox"
+                id="headOfFamilyCheckbox"
+                checked={isSelected}  // Checked based on the boolean value
+                onChange={handleSelectRow}  // Toggle the selection on change
+              />
             </div>
+
+
+
           </div>
 
           <div className="grid grid-cols-3 gap-10">
             {/* First Column */}
             <div className="col-span-1 space-y-4">
 
-            <div className=" flex">
+              <div className=" flex">
                 <label htmlFor="" className=" w-20">
-                नाव
+                  नाव
                 </label>
                 <InputGroup
                   type="text"
@@ -443,18 +442,18 @@ const getYojna = () => {
                 />
               </div>
 
-<div className="flex w-full mb-4">
-              <label htmlFor="landmark" className="w-28">
-                लँडमार्क
-              </label>
-              <Select
-                className="w-full"
-                placeholder="लँडमार्क"
-                value={formData.landmark} 
-                onChange={(e) => handleSelectChange("landmark", e.target.value)}
-                options={landmarkOption} 
-              />
-            </div>
+              <div className="flex w-full mb-4">
+                <label htmlFor="landmark" className="w-28">
+                  लँडमार्क
+                </label>
+                <Select
+                  className="w-full"
+                  placeholder="लँडमार्क"
+                  value={formData.landmark}
+                  onChange={(e) => handleSelectChange("landmark", e.target.value)}
+                  options={landmarkOption}
+                />
+              </div>
 
               <div className=" flex ">
                 <label htmlFor="" className=" w-28">
@@ -557,124 +556,124 @@ const getYojna = () => {
                 />
               </div>
               <div className="flex items-center mb-2  pt-2">
-        <label htmlFor="outsideVoters" className="w-64">
-          बाहेरचे मतदार
-        </label>
-        <div className="w-full">
-          <label className="inline-flex items-center mr-4">
-            <input
-              type="radio"
-              name="outsideVoters"
-              value={true}
-              checked={formData.outsideVoters === true}
-              onChange={() => handleSelectChange("outsideVoters", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="outsideVoters"
-              value={false}
-              checked={formData.outsideVoters === false}
-              onChange={() => handleSelectChange("outsideVoters", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-      </div>
+                <label htmlFor="outsideVoters" className="w-64">
+                  बाहेरचे मतदार
+                </label>
+                <div className="w-full">
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      name="outsideVoters"
+                      value={true}
+                      checked={formData.outsideVoters === true}
+                      onChange={() => handleSelectChange("outsideVoters", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="outsideVoters"
+                      value={false}
+                      checked={formData.outsideVoters === false}
+                      onChange={() => handleSelectChange("outsideVoters", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
-      <div className="flex items-center mb-4 pt-0">
-        <label htmlFor="bachatGat" className="w-64">
-          महिला बचत गट
-        </label>
-        <div className="w-full">
-          <label className="inline-flex items-center mr-4">
-            <input
-              type="radio"
-              name="bachatGat"
-              value={true}
-              checked={formData.bachatGat === true}
-              onChange={() => handleSelectChange("bachatGat", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="bachatGat"
-              value={false}
-              checked={formData.bachatGat === false}
-              onChange={() => handleSelectChange("bachatGat", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-      </div>
+              <div className="flex items-center mb-4 pt-0">
+                <label htmlFor="bachatGat" className="w-64">
+                  महिला बचत गट
+                </label>
+                <div className="w-full">
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      name="bachatGat"
+                      value={true}
+                      checked={formData.bachatGat === true}
+                      onChange={() => handleSelectChange("bachatGat", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="bachatGat"
+                      value={false}
+                      checked={formData.bachatGat === false}
+                      onChange={() => handleSelectChange("bachatGat", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
-      <div className="flex items-center mb-4 pt-0">
-        <label htmlFor="society" className="w-64">
-          सोसायटी पदाधिकारी
-        </label>
-        <div className="w-full">
-          <label className="inline-flex items-center mr-4">
-            <input
-              type="radio"
-              name="society"
-              value={true}
-              checked={formData.society === true}
-              onChange={() => handleSelectChange("society", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="society"
-              value={false}
-              checked={formData.society === false}
-              onChange={() => handleSelectChange("society", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-      </div>
+              <div className="flex items-center mb-4 pt-0">
+                <label htmlFor="society" className="w-64">
+                  सोसायटी पदाधिकारी
+                </label>
+                <div className="w-full">
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      name="society"
+                      value={true}
+                      checked={formData.society === true}
+                      onChange={() => handleSelectChange("society", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="society"
+                      value={false}
+                      checked={formData.society === false}
+                      onChange={() => handleSelectChange("society", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
-      <div className="flex items-center mb-4 pt-0">
-        <label htmlFor="bankAccountHolder" className="w-64">
-          बँक खातेदार
-        </label>
-        <div className="w-full">
-          <label className="inline-flex items-center mr-4">
-            <input
-              type="radio"
-              name="bankAccountHolder"
-              value={true}
-              checked={formData.bankAccountHolder === true}
-              onChange={() => handleSelectChange("bankAccountHolder", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="bankAccountHolder"
-              value={false}
-              checked={formData.bankAccountHolder === false}
-              onChange={() => handleSelectChange("bankAccountHolder", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-      </div>
+              <div className="flex items-center mb-4 pt-0">
+                <label htmlFor="bankAccountHolder" className="w-64">
+                  बँक खातेदार
+                </label>
+                <div className="w-full">
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      name="bankAccountHolder"
+                      value={true}
+                      checked={formData.bankAccountHolder === true}
+                      onChange={() => handleSelectChange("bankAccountHolder", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="bankAccountHolder"
+                      value={false}
+                      checked={formData.bankAccountHolder === false}
+                      onChange={() => handleSelectChange("bankAccountHolder", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
               <div
                 className="bg-blue-500 flex justify-center items-center rounded-md py-1 mt-4"
@@ -757,7 +756,7 @@ const getYojna = () => {
                   id="mulgav"
                   placeholder="मुळगाव"
                   value={mulgav}
-                  onChange={(e)=>setMulgav(e.target.value)}
+                  onChange={(e) => setMulgav(e.target.value)}
                 />
               </div>
               {/* <Select
@@ -823,104 +822,104 @@ const getYojna = () => {
               </div>
 
               <div className="flex mb-4">
-        <label htmlFor="" className="w-28">
-          योजना
-        </label>
-        <Select
-          className="w-full"
-          placeholder="योजना"
-          value={formData.yojna}
-          onChange={(e) => handleSelectChange("yojna", e.target.value)}
-          options={yojnaOption}
-        />
-      </div>
+                <label htmlFor="" className="w-28">
+                  योजना
+                </label>
+                <Select
+                  className="w-full"
+                  placeholder="योजना"
+                  value={formData.yojna}
+                  onChange={(e) => handleSelectChange("yojna", e.target.value)}
+                  options={yojnaOption}
+                />
+              </div>
 
-   
+
               <div className="flex items-center mb-4 pt-2 ">
-        <label htmlFor="grampanchayatMember" className="w-64">
-          ग्रामपंचायत पदाधिकारी
-        </label>
-        <div className="w-full">
-          <label className="inline-flex items-center mr-4">
-            <input
-              type="radio"
-              name="grampanchayatMember"
-              value={true}
-              checked={formData.grampanchayatMember === true}
-              onChange={() => handleSelectChange("grampanchayatMember", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="grampanchayatMember"
-              value={false}
-              checked={formData.grampanchayatMember === false}
-              onChange={() => handleSelectChange("grampanchayatMember", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-      </div>
+                <label htmlFor="grampanchayatMember" className="w-64">
+                  ग्रामपंचायत पदाधिकारी
+                </label>
+                <div className="w-full">
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      name="grampanchayatMember"
+                      value={true}
+                      checked={formData.grampanchayatMember === true}
+                      onChange={() => handleSelectChange("grampanchayatMember", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="grampanchayatMember"
+                      value={false}
+                      checked={formData.grampanchayatMember === false}
+                      onChange={() => handleSelectChange("grampanchayatMember", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
-      <div className="flex items-center mb-4 pt-3">
-        <label className="w-64">आपले नाराज</label>
-        <div className="w-full flex gap-4">
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="apleNaraj"
-              value={true}
-              checked={formData.apleNaraj === true}
-              onChange={() => handleSelectChange("apleNaraj", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="apleNaraj"
-              value={false}
-              checked={formData.apleNaraj === false}
-              onChange={() => handleSelectChange("apleNaraj", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-      </div>
+              <div className="flex items-center mb-4 pt-3">
+                <label className="w-64">आपले नाराज</label>
+                <div className="w-full flex gap-4">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="apleNaraj"
+                      value={true}
+                      checked={formData.apleNaraj === true}
+                      onChange={() => handleSelectChange("apleNaraj", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="apleNaraj"
+                      value={false}
+                      checked={formData.apleNaraj === false}
+                      onChange={() => handleSelectChange("apleNaraj", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
-      <div className="flex items-center mb-4 pt-2">
-        <label className="w-64">त्यांचे नाराज</label>
-        <div className="w-full flex gap-4">
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="tyancheNaraj"
-              value={true}
-              checked={formData.tyancheNaraj === true}
-              onChange={() => handleSelectChange("tyancheNaraj", true)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">आहे</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="tyancheNaraj"
-              value={false}
-              checked={formData.tyancheNaraj === false}
-              onChange={() => handleSelectChange("tyancheNaraj", false)}
-              className="form-radio text-blue-500"
-            />
-            <span className="ml-2">नाही</span>
-          </label>
-        </div>
-        </div>
+              <div className="flex items-center mb-4 pt-2">
+                <label className="w-64">त्यांचे नाराज</label>
+                <div className="w-full flex gap-4">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="tyancheNaraj"
+                      value={true}
+                      checked={formData.tyancheNaraj === true}
+                      onChange={() => handleSelectChange("tyancheNaraj", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="tyancheNaraj"
+                      value={false}
+                      checked={formData.tyancheNaraj === false}
+                      onChange={() => handleSelectChange("tyancheNaraj", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
 
 
               <div className="bg-blue-500 flex justify-center items-center rounded-md py-1 mt-4">
@@ -942,48 +941,48 @@ const getYojna = () => {
                 </button>
               </div>
               <div className="mt-5 border h-[43rem] overflow-y-auto overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              नाव
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              मोबाईल नं.
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              जन्मतारीख
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              आधार
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              अ क्र.
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              वय
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              लिंग
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {FamilyMember.map((member, index) => (
-            <tr key={index}>
-              
-              <td className="px-6 py-2 whitespace-nowrap">{member.name}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{member.MOBILE_NO}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{member.dateOfBirth}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{member.aadhar}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{member.serialNo}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{member.age}</td>
-              <td className="px-6 py-2 whitespace-nowrap">{member.gender}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        नाव
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        मोबाईल नं.
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        जन्मतारीख
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        आधार
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        अ क्र.
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        वय
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        लिंग
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {FamilyMember.map((member, index) => (
+                      <tr key={index}>
+
+                        <td className="px-6 py-2 whitespace-nowrap">{member.name}</td>
+                        <td className="px-6 py-2 whitespace-nowrap">{member.MOBILE_NO}</td>
+                        <td className="px-6 py-2 whitespace-nowrap">{member.dateOfBirth}</td>
+                        <td className="px-6 py-2 whitespace-nowrap">{member.aadhar}</td>
+                        <td className="px-6 py-2 whitespace-nowrap">{member.serialNo}</td>
+                        <td className="px-6 py-2 whitespace-nowrap">{member.age}</td>
+                        <td className="px-6 py-2 whitespace-nowrap">{member.gender}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

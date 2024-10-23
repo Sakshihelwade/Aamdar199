@@ -156,6 +156,8 @@ const ExportData = () => {
         setColor('');
         setKaryakartaName('');
         setStatus('');
+        setVillageName('');
+        setTotal(0);
     };
 
     useEffect(() => {

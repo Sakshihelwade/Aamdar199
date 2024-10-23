@@ -119,7 +119,7 @@ const DubarTable2 = ({ Props, onPageChange, voterCount }) => {
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-2">
+      {/* <div className="flex justify-between items-center mt-2">
         <button
           onClick={handlePrevious}
           className={`bg-gray-200 text-gray-600 px-2 py-1 rounded-md ${currentPage === 1 && 'opacity-50 cursor-not-allowed'}`}
@@ -195,7 +195,7 @@ const DubarTable2 = ({ Props, onPageChange, voterCount }) => {
 
 
         </Modal>
-      </div>
+      </div> */}
 
 
     </div>

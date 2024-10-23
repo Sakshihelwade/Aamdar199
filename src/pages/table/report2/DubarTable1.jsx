@@ -458,16 +458,16 @@ const DubarTable1 = ({ title = "", Props, voterCount, handleDubarVoter }) => {
                             </option>
                         ))}
                     </select> */}
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                    {/* <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
                         Page{" "}
                         <span>
                             {pageIndex + 1} of {pageOptions.length}
                         </span>
-                    </span>
+                    </span> */}
                 </div>
             </div>
 
-            <div className="md:flex md:space-y-0 space-y-5 justify-between mt-6 items-center">
+            {/* <div className="md:flex md:space-y-0 space-y-5 justify-between mt-6 items-center">
                 <ul className="flex items-center space-x-3 rtl:space-x-reverse">
                     <li>
                         <button
@@ -507,7 +507,7 @@ const DubarTable1 = ({ title = "", Props, voterCount, handleDubarVoter }) => {
                         </button>
                     </li>
                 </ul>
-            </div>
+            </div> */}
         </>
     );
 };

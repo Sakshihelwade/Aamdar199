@@ -51,7 +51,7 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
                 return <span>{row.index + 1}</span>;
             },
         },
-       {
+        {
             Header: "नाव",
             accessor: "castname",
             Cell: (row) => {
@@ -78,6 +78,15 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
             Cell: (row) => {
                 return (
                     <div className="flex space-x-3 rtl:space-x-reverse">
+                        <Tooltip content="View" placement="top" arrow animation="shift-away">
+                            <button className="action-btn" type="button" onClick={() => {
+                                setSelectedRow(row?.cell?.row?.original)
+                                setViewKaryakartaModal(true)
+                            }}>
+                                <Icon icon="heroicons:eye" />
+                            </button>
+                        </Tooltip>
+
                         <Tooltip content="Edit" placement="top" arrow animation="shift-away">
                             <button
                                 className="action-btn"
@@ -114,28 +123,29 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
     const [casteMeta, setCasteMeta] = useState([]);
     const data = useMemo(() => casteMeta, [casteMeta]);
     const [editCasteModal, setEditCasteModal] = useState(false)
+    const [viewKaryakartaModal, setViewKaryakartaModal] = useState(false)
     const [selectedRowData, setSelectedRowData] = useState(null);
-    const [selecteVoter,setSelectedVoter]=useState()
+    const [selecteVoter, setSelectedVoter] = useState()
     const [activeModal, setActiveModal] = useState(false);
-const [allVoter,setAllVoter]=useState([])
-const familyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
+    const [allVoter, setAllVoter] = useState([])
+    const familyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
 
     const [addCasteModal, stAddCastModal] = useState(false)
-    const [cast,setCast]=useState('')
+    const [cast, setCast] = useState('')
     const [name, setName] = useState("");
-    const [village,setVillage]=("")
-    const [mobileNo,setMobileNo]=("")
+    const [village, setVillage] = ("")
+    const [mobileNo, setMobileNo] = ("")
     const [castId, setCastId] = useState("")
     const [isOpen, setIsOpen] = useState(false);
-    // const [castName, setCastName]= useState("")
-    // console.log(cast)
-const handelSetData=(value)=>{
-    setSelectedVoter(value)
-}
+    const [selectedRow, setSelectedRow]= useState("")
+    console.log(selectedRow)
+    const handelSetData = (value) => {
+        setSelectedVoter(value)
+    }
 
-const handleFamilyModal = (val)=>{
-    setActiveModal(val)
-}
+    const handleFamilyModal = (val) => {
+        setActiveModal(val)
+    }
 
     const tableInstance = useTable(
         {
@@ -233,22 +243,22 @@ const handleFamilyModal = (val)=>{
 
     const getAllVoters = () => {
         axios
-          .get(`${base_url}/api/surve/searchVotter/${id}?name=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&village=${villageName}&cardNumber=${cardNo}&page=${currentPage}`)
-          .then((resp) => {
-            setAllVoter(resp.data.voters);
-            setVoterCount(resp.data);
-            // toast.success('Filter Sucessfully')
-          })
-          .catch((error) => {
-            console.log(error);
-            // toast.warning('No results found for the provided search criteria')
-          });
-      };
+            .get(`${base_url}/api/surve/searchVotter/${id}?name=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&village=${villageName}&cardNumber=${cardNo}&page=${currentPage}`)
+            .then((resp) => {
+                setAllVoter(resp.data.voters);
+                setVoterCount(resp.data);
+                // toast.success('Filter Sucessfully')
+            })
+            .catch((error) => {
+                console.log(error);
+                // toast.warning('No results found for the provided search criteria')
+            });
+    };
 
     const handleRowClick = (row) => {
         setSelectedRowData(row);
         setActiveModal(true);
-      };
+    };
 
     useEffect(() => {
         getCaste();
@@ -263,7 +273,7 @@ const handleFamilyModal = (val)=>{
                 </div>
                 <div>
                     <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={() => stAddCastModal(true)}>
-                    नवीन कार्यकर्ता जोडा
+                        नवीन कार्यकर्ता जोडा
                     </button>
                 </div>
 
@@ -304,7 +314,7 @@ const handleFamilyModal = (val)=>{
                                 {page.map((row) => {
                                     prepareRow(row);
                                     return (
-                                        <tr {...row.getRowProps()}  onDoubleClick={() => handleRowClick(row)}>
+                                        <tr {...row.getRowProps()} onDoubleClick={() => handleRowClick(row)}>
                                             {row.cells.map((cell) => {
                                                 return (
                                                     <td {...cell.getCellProps()} className="table-td">
@@ -419,80 +429,88 @@ const handleFamilyModal = (val)=>{
                 </div>
             </Modal>
 
-    {/* Confirmation Modal should be outside of the table */}
-    <Modal
-                    activeModal={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    title="हटवण्याची पुष्टी"
-                >
-                    <div className="flex flex-col justify-center items-center">
-                        <p className="text-xl font-semibold text-center">तुम्ही खरंच हटवू इच्छिता का?</p>
-                        <div className="mt-4"> {/* Add margin to separate text from buttons */}
-                            <button className="bg-red-500 text-white px-4 py-2 mr-2" onClick={deleteCast}>
-                                होय
-                            </button>
-                            <button className="bg-blue-500 text-white px-4 py-2" onClick={() => setIsOpen(false)}>
-                                नाही
-                            </button>
-                        </div>
+            {/* Confirmation Modal should be outside of the table */}
+            <Modal
+                activeModal={isOpen}
+                onClose={() => setIsOpen(false)}
+                title="हटवण्याची पुष्टी"
+            >
+                <div className="flex flex-col justify-center items-center">
+                    <p className="text-xl font-semibold text-center">तुम्ही खरंच हटवू इच्छिता का?</p>
+                    <div className="mt-4"> {/* Add margin to separate text from buttons */}
+                        <button className="bg-red-500 text-white px-4 py-2 mr-2" onClick={deleteCast}>
+                            होय
+                        </button>
+                        <button className="bg-blue-500 text-white px-4 py-2" onClick={() => setIsOpen(false)}>
+                            नाही
+                        </button>
                     </div>
-                </Modal>
+                </div>
+            </Modal>
 
-                {/* Add cast modal */}
-                <Modal
-                    title="कार्यकर्ता "
-                    activeModal={addCasteModal}
-                    className="max-w-xl"
-                    // themeClass="bg-[#b91c1c]"
-                    onClose={() => stAddCastModal(false)}
-                >
-                    <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
-                        <div>
-                            <Inputgroup
-                                type="text"
-                                label="नाव"
-                                id="नाव"
-                                placeholder="नाव"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                              <Inputgroup
-                                type="text"
-                                label="गाव"
-                                id="गाव"
-                                placeholder="गाव"
-                                value={village}
-                                onChange={(e) => setVillage(e.target.value)}
-                            />
-                              <Inputgroup
-                                type="text"
-                                label="मोबाईल नं	"
-                                id="मोबाईल नं	"
-                                placeholder="मोबाईल नं	"
-                                value={mobileNo}
-                                onChange={(e) => setMobileNo(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex justify-end items-end my-3">
-                            <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={addCast}>
-                                समाविष्ट करा
-                            </button>
-                        </div>
+            {/* Add karyakarta modal */}
+            <Modal
+                title="कार्यकर्ता "
+                activeModal={addCasteModal}
+                className="max-w-xl"
+                // themeClass="bg-[#b91c1c]"
+                onClose={() => stAddCastModal(false)}
+            >
+                <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
+                    <div>
+                        <Inputgroup
+                            type="text"
+                            label="नाव"
+                            id="नाव"
+                            placeholder="नाव"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                        <Inputgroup
+                            type="text"
+                            label="गाव"
+                            id="गाव"
+                            placeholder="गाव"
+                            value={village}
+                            onChange={(e) => setVillage(e.target.value)}
+                        />
+                        <Inputgroup
+                            type="text"
+                            label="मोबाईल नं	"
+                            id="मोबाईल नं	"
+                            placeholder="मोबाईल नं	"
+                            value={mobileNo}
+                            onChange={(e) => setMobileNo(e.target.value)}
+                        />
                     </div>
-                </Modal>
+                    <div className="flex justify-end items-end my-3">
+                        <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={addCast}>
+                            समाविष्ट करा
+                        </button>
+                    </div>
+                </div>
+            </Modal>
 
 
-              {/* Add Karyakarta Voter */}
-              <Modal
-               title="कार्यकर्ता "
-               activeModal={activeModal}
-              className='w-full'
-               // themeClass="bg-[#b91c1c]"
-               onClose={() => setActiveModal(false)}
-              >
-<KaryakartaAssignVoter  handelSetData={handelSetData} handleFamilyModal={handleFamilyModal} familyMember={familyMember}/>
-              </Modal>
+            {/* Add Karyakarta Voter */}
+            <Modal
+                title="कार्यकर्ता "
+                activeModal={activeModal}
+                className='w-full'
+                // themeClass="bg-[#b91c1c]"
+                onClose={() => setActiveModal(false)}
+            >
+                <KaryakartaAssignVoter handelSetData={handelSetData} handleFamilyModal={handleFamilyModal} familyMember={familyMember} />
+            </Modal>
 
+            <Modal
+                title="तपशील पहा"
+                activeModal={viewKaryakartaModal}
+                className="className='w-full'"
+                onClose={()=>setViewKaryakartaModal(false)}
+            >
+
+            </Modal>
         </Card>
     );
 };
