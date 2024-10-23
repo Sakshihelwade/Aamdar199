@@ -45,7 +45,7 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
 
     const COLUMNS = [
         {
-            Header: "अ.नं.",
+            Header: "अ.क्र.",
             accessor: "srNo",
             Cell: ({ row }) => {
                 return <span>{row.index + 1}</span>;
@@ -139,6 +139,7 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedRow, setSelectedRow]= useState("")
     console.log(selectedRow)
+
     const handelSetData = (value) => {
         setSelectedVoter(value)
     }
@@ -146,6 +147,25 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
     const handleFamilyModal = (val) => {
         setActiveModal(val)
     }
+
+const addKaryakarta=()=>{
+    const payload={
+        fullName:name,
+        address:village,
+        mobileNumber:mobileNo,
+        loginRights:false
+    }
+    axios.post(`${base_url}/api/addUser`,payload)
+    .then((resp)=>{
+        console.log(resp)
+        toast.success('Karyakarta Add Successfully')
+    })
+    .catch((error)=>{
+        console.log(error)
+    })
+}
+
+
 
     const tableInstance = useTable(
         {
@@ -189,22 +209,7 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
             });
     };
 
-    const addCast = async () => {
-        const payload = {
-            castname: cast
-        }
-        console.log(payload)
-        try {
-            const resp = await axios.post(`${base_url}/insertCastMeta`, payload)
-            console.log(resp.data)
-            toast.success("समाविष्ट केले")
-            stAddCastModal(false)
-            getCaste();
-        } catch (error) {
-            console.log(error)
-            toast.error("पुन्हा प्रयत्न करा")
-        }
-    }
+  
 
     const editCast = async () => {
         const payload = {
@@ -484,7 +489,7 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
                         />
                     </div>
                     <div className="flex justify-end items-end my-3">
-                        <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={addCast}>
+                        <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={addKaryakarta}>
                             समाविष्ट करा
                         </button>
                     </div>

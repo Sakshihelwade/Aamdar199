@@ -13,16 +13,12 @@ const KaryakartaAssignVoter = ({handelSetData,handleFamilyModal,familyMember}) =
     const [boothNo, setBoothNo] = useState("");
     const [fromList, setFromList] = useState("");
     const [toList, setToList] = useState("");
-
-
+ const [selectAllVoter,setSelectAllVoter]=useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [inputPage, setInputPage] = useState();
   const [allVoter, setAllVoter] = useState([]);
   const [voterCount, setVoterCount] = useState();
-  const [village, setVillage] = useState('');
-  const [voterName, setVoterName] = useState("");
-  const [surname, setSurName] = useState("");
   const [errors, setErrors] = useState({});
   const [selectedRows, setSelectedRows] = useState([]); 
   const [villageOption, setVillageOption] = useState([]);
@@ -35,6 +31,7 @@ const KaryakartaAssignVoter = ({handelSetData,handleFamilyModal,familyMember}) =
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   let currentRows = data;
+
 useEffect(()=>{
     handelSetData(selectedRows)
 })
@@ -48,7 +45,7 @@ const handleVillageChange = (selectedOption) => {
   const validateFields = () => {
     let validationErrors = {};
     if ((fromList || toList) && (!villageId || !boothNo)) {
-      validationErrors.village = "Please select a village and booth if entering From List or To List numbers.";
+      validationErrors.village = "यादी नं. पासून किंवा यादी नं. पर्यंत प्रविष्ट करत असल्यास कृपया गाव आणि बूथ निवडा.";
     }
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
@@ -230,10 +227,13 @@ useEffect(()=>{
           </div>
 
         </div>
-        <div className=' justify-end'>
-        {errors.village && <span className="text-red-500 text-sm">{errors.village}</span>}
-        <input type="checkbox" id="selectAll"   />
+        <div className='flex gap-5'>
+        <div className=' flex justify-start gap-2'>
+        <input type="checkbox" id="selectAll"  onClick={()=>setSelectAllVoter(!selectAllVoter)} />
   <label htmlFor="selectAll">Select All</label>
+  </div> 
+        {errors.village && <span className="text-red-500 text-[16px]">{errors.village}</span>}
+       
         </div>
         <div className="overflow-x-auto">
           <table className="w-full bg-white border border-gray-200">
@@ -244,7 +244,7 @@ useEffect(()=>{
                   {/* <input type="checkbox" onChange={handleSelectAll} /> */}
                 </th>
                 <th className="px-1 py-2 border border-gray-300">भाग/बूथ नं</th>
-                <th className="px-1 py-2 border border-gray-300">अ.नं.</th>
+                <th className="px-1 py-2 border border-gray-300">अ.क्र.</th>
                 <th className="px-1 py-2 border border-gray-300">नाव</th>
                 <th className="px-1 py-2 border border-gray-300">वय</th>
                 <th className="px-1 py-2 border border-gray-300">लिंग</th>
