@@ -232,7 +232,8 @@ useEffect(()=>{
         </div>
         <div className=' justify-end'>
         {errors.village && <span className="text-red-500 text-sm">{errors.village}</span>}
-        <input type="checkbox" label="Select All"/>
+        <input type="checkbox" id="selectAll"   />
+  <label htmlFor="selectAll">Select All</label>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full bg-white border border-gray-200">
