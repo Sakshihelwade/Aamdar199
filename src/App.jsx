@@ -150,6 +150,7 @@ import Society from "./pages/table/meta-data/Society";
 import Landmark from "./pages/table/meta-data/Landmark";
 import Filter from "./pages/table/react-tables/Filter";
 import FlashScreen from "./pages/table/react-tables/FlashScreen";
+import NewKaryakarta from "./pages/table/meta-data/NewKaryakarta";
 
 function App() {
   return (
@@ -305,6 +306,7 @@ function App() {
           <Route path="surveyed-or-unsurveyed" element={<SurveyedOrUnsurveyed />} />
           <Route path="new-voters" element={<NewVoters />} />
           {/* Meta data */}
+          <Route path="New-Karyakarta" element={<NewKaryakarta/>}/>
           <Route path="cast" element={<CastMetadata />} />
           <Route path="business" element={<Business />} />
           <Route path="yojana" element={<Yojana />} />

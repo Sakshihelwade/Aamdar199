@@ -16,6 +16,9 @@ import { base_url } from "../../../config/base_url";
 import Modal from "../../../components/ui/Modal";
 import Inputgroup from "../../../components/ui/InputGroup"
 import { toast } from "react-toastify";
+import { useStepContext } from "@mui/material";
+import SeleteFamilyMemberTable from "../react-tables/SelcteFamilyMemberTable";
+import KaryakartaAssignVoter from "./KaryakartaAssignVoter";
 
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -38,20 +41,33 @@ const IndeterminateCheckbox = React.forwardRef(
     }
 );
 
-const Nagar = ({ title = "नगर" }) => {
+const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
 
     const COLUMNS = [
         {
-            Header: "अ.क्र.",
+            Header: "अ.नं.",
             accessor: "srNo",
             Cell: ({ row }) => {
                 return <span>{row.index + 1}</span>;
             },
         },
-       
-        {
+       {
             Header: "नाव",
-            accessor: "name",
+            accessor: "castname",
+            Cell: (row) => {
+                return <span>{row?.cell?.value}</span>;
+            },
+        },
+        {
+            Header: "गाव",
+            accessor: "castnam",
+            Cell: (row) => {
+                return <span>{row?.cell?.value}</span>;
+            },
+        },
+        {
+            Header: "मोबाईल नं",
+            accessor: "castna",
             Cell: (row) => {
                 return <span>{row?.cell?.value}</span>;
             },
@@ -69,7 +85,7 @@ const Nagar = ({ title = "नगर" }) => {
                                 onClick={() => {
                                     setEditCasteModal(true);
                                     setCastId(row.cell.row.original._id);
-                                    setCast(row.cell.row.values.name);
+                                    setCast(row.cell.row.original.castname);
                                 }}
                             >
                                 <Icon icon="heroicons:pencil-square" />
@@ -98,13 +114,28 @@ const Nagar = ({ title = "नगर" }) => {
     const [casteMeta, setCasteMeta] = useState([]);
     const data = useMemo(() => casteMeta, [casteMeta]);
     const [editCasteModal, setEditCasteModal] = useState(false)
-    const [deleteModal, setDeleteModal] = useState(false)
+    const [selectedRowData, setSelectedRowData] = useState(null);
+    const [selecteVoter,setSelectedVoter]=useState()
+    const [activeModal, setActiveModal] = useState(false);
+const [allVoter,setAllVoter]=useState([])
+const familyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
+
     const [addCasteModal, stAddCastModal] = useState(false)
-    const [cast, setCast] = useState("");
+    const [cast,setCast]=useState('')
+    const [name, setName] = useState("");
+    const [village,setVillage]=("")
+    const [mobileNo,setMobileNo]=("")
     const [castId, setCastId] = useState("")
     const [isOpen, setIsOpen] = useState(false);
     // const [castName, setCastName]= useState("")
-    console.log(cast)
+    // console.log(cast)
+const handelSetData=(value)=>{
+    setSelectedVoter(value)
+}
+
+const handleFamilyModal = (val)=>{
+    setActiveModal(val)
+}
 
     const tableInstance = useTable(
         {
@@ -139,29 +170,22 @@ const Nagar = ({ title = "नगर" }) => {
 
     const getCaste = () => {
         axios
-            .get(`${base_url}/get-nager`)
+            .get(`${base_url}/getCastMeta`)
             .then((resp) => {
                 setCasteMeta(resp.data.data);
             })
             .catch((error) => {
                 console.log(error);
             });
-    }; 
-
-    useEffect(() => {
-      getCaste();
-  }, []); 
-
-  console.log("casteMeta" , casteMeta);
-
+    };
 
     const addCast = async () => {
         const payload = {
-            name: cast
+            castname: cast
         }
         console.log(payload)
         try {
-            const resp = await axios.post(`${base_url}/insert-nager`, payload)
+            const resp = await axios.post(`${base_url}/insertCastMeta`, payload)
             console.log(resp.data)
             toast.success("समाविष्ट केले")
             stAddCastModal(false)
@@ -174,13 +198,13 @@ const Nagar = ({ title = "नगर" }) => {
 
     const editCast = async () => {
         const payload = {
-            name: cast
+            castname: cast
         }
         try {
-            const resp = await axios.post(`${base_url}/updateNager/${castId}`, payload)
+            const resp = await axios.post(`${base_url}/updateCastMeta/${castId}`, payload)
             console.log(resp.data)
             toast.success("यशस्वीरित्या अद्यतनित केले")
-            setEditCasteModal(false)
+            handleClose()
             getCaste()
         } catch (error) {
             console.log(error)
@@ -190,7 +214,7 @@ const Nagar = ({ title = "नगर" }) => {
 
     const deleteCast = async () => {
         try {
-            await axios.post(`${base_url}/deleteNager/${castId}`);
+            await axios.post(`${base_url}/deleteCast/${castId}`);
             toast.success("यशस्वीरित्या हटवले");
             getCaste();
         } catch (error) {
@@ -204,10 +228,32 @@ const Nagar = ({ title = "नगर" }) => {
 
     const handleClose = () => {
         setEditCasteModal(false),
-        setCast("")
+            setCast("")
     }
 
-   
+    const getAllVoters = () => {
+        axios
+          .get(`${base_url}/api/surve/searchVotter/${id}?name=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&village=${villageName}&cardNumber=${cardNo}&page=${currentPage}`)
+          .then((resp) => {
+            setAllVoter(resp.data.voters);
+            setVoterCount(resp.data);
+            // toast.success('Filter Sucessfully')
+          })
+          .catch((error) => {
+            console.log(error);
+            // toast.warning('No results found for the provided search criteria')
+          });
+      };
+
+    const handleRowClick = (row) => {
+        setSelectedRowData(row);
+        setActiveModal(true);
+      };
+
+    useEffect(() => {
+        getCaste();
+    }, []);
+
     return (
         <Card>
             <h4 className="card-title">{title}</h4>
@@ -217,56 +263,9 @@ const Nagar = ({ title = "नगर" }) => {
                 </div>
                 <div>
                     <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={() => stAddCastModal(true)}>
-                    नगर जोडा
+                    नवीन कार्यकर्ता जोडा
                     </button>
                 </div>
-
-                {/* Confirmation Modal should be outside of the table */}
-                <Modal
-                    activeModal={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    title="हटवण्याची पुष्टी"
-                >
-                    <div className="flex flex-col justify-center items-center">
-                        <p className="text-xl font-semibold text-center">तुम्ही खरंच हटवू इच्छिता का?</p>
-                        <div className="mt-4"> {/* Add margin to separate text from buttons */}
-                            <button className="bg-red-500 text-white px-4 py-2 mr-2" onClick={deleteCast}>
-                                होय
-                            </button>
-                            <button className="bg-blue-500 text-white px-4 py-2" onClick={() => setIsOpen(false)}>
-                                नाही
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
-
-                {/* Add cast modal */}
-                <Modal
-                    title="नगर "
-                    activeModal={addCasteModal}
-                    className="max-w-xl"
-                    // themeClass="bg-[#b91c1c]"
-                    onClose={() => stAddCastModal(false)}
-                >
-                    <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
-                        <div>
-                            <Inputgroup
-                                type="text"
-                                label="नगर "
-                                id="नगर "
-                                placeholder="नगर "
-                                value={cast}
-                                onChange={(e) => setCast(e.target.value)}
-                            // isClearable={true} // Uncomment if you want to allow clearing the input
-                            />
-                        </div>
-                        <div className="flex justify-end items-end my-3">
-                            <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={addCast}>
-                                समाविष्ट करा
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
 
             </div>
             <div className="overflow-x-auto -mx-6">
@@ -305,7 +304,7 @@ const Nagar = ({ title = "नगर" }) => {
                                 {page.map((row) => {
                                     prepareRow(row);
                                     return (
-                                        <tr {...row.getRowProps()}>
+                                        <tr {...row.getRowProps()}  onDoubleClick={() => handleRowClick(row)}>
                                             {row.cells.map((cell) => {
                                                 return (
                                                     <td {...cell.getCellProps()} className="table-td">
@@ -404,9 +403,9 @@ const Nagar = ({ title = "नगर" }) => {
                     <div>
                         <Inputgroup
                             type="text"
-                            label="नगर "
-                            id="नगर "
-                            placeholder="नगर "
+                            label="जात"
+                            id="जात"
+                            placeholder="जात"
                             value={cast}
                             onChange={(e) => setCast(e.target.value)}
                         // isClearable={true} // Uncomment if you want to allow clearing the input
@@ -420,9 +419,82 @@ const Nagar = ({ title = "नगर" }) => {
                 </div>
             </Modal>
 
+    {/* Confirmation Modal should be outside of the table */}
+    <Modal
+                    activeModal={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    title="हटवण्याची पुष्टी"
+                >
+                    <div className="flex flex-col justify-center items-center">
+                        <p className="text-xl font-semibold text-center">तुम्ही खरंच हटवू इच्छिता का?</p>
+                        <div className="mt-4"> {/* Add margin to separate text from buttons */}
+                            <button className="bg-red-500 text-white px-4 py-2 mr-2" onClick={deleteCast}>
+                                होय
+                            </button>
+                            <button className="bg-blue-500 text-white px-4 py-2" onClick={() => setIsOpen(false)}>
+                                नाही
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+
+                {/* Add cast modal */}
+                <Modal
+                    title="कार्यकर्ता "
+                    activeModal={addCasteModal}
+                    className="max-w-xl"
+                    // themeClass="bg-[#b91c1c]"
+                    onClose={() => stAddCastModal(false)}
+                >
+                    <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
+                        <div>
+                            <Inputgroup
+                                type="text"
+                                label="नाव"
+                                id="नाव"
+                                placeholder="नाव"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                              <Inputgroup
+                                type="text"
+                                label="गाव"
+                                id="गाव"
+                                placeholder="गाव"
+                                value={village}
+                                onChange={(e) => setVillage(e.target.value)}
+                            />
+                              <Inputgroup
+                                type="text"
+                                label="मोबाईल नं	"
+                                id="मोबाईल नं	"
+                                placeholder="मोबाईल नं	"
+                                value={mobileNo}
+                                onChange={(e) => setMobileNo(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex justify-end items-end my-3">
+                            <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md " onClick={addCast}>
+                                समाविष्ट करा
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+
+
+              {/* Add Karyakarta Voter */}
+              <Modal
+               title="कार्यकर्ता "
+               activeModal={activeModal}
+              className='w-full'
+               // themeClass="bg-[#b91c1c]"
+               onClose={() => setActiveModal(false)}
+              >
+<KaryakartaAssignVoter  handelSetData={handelSetData} handleFamilyModal={handleFamilyModal} familyMember={familyMember}/>
+              </Modal>
 
         </Card>
     );
 };
 
-export default Nagar;
+export default NewKaryakarta;
