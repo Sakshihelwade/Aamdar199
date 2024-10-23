@@ -11,9 +11,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { base_url } from "../../../config/base_url";
 import { v1 as uuidv1 } from 'uuid';
-
-
-
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons for eye and eye slash
 
 // Validation schema using Yup
 const schema = yup
@@ -27,27 +25,27 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
-  const [deviceId, setDeviceID] = useState("")
-  // React Hook Form for managing the form and validations
-  // console.log(deviceId,"idddddddddd")
+  const [deviceId, setDeviceID] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-    setValue, // To manually set form values
+    setValue, 
   } = useForm({
     resolver: yupResolver(schema),
     mode: "all",
   });
+
   useEffect(() => {
-    // Check if a device ID is already stored in local storage
     let storedDeviceId = localStorage.getItem("deviceId");
     if (!storedDeviceId) {
-      storedDeviceId = uuidv1(); // Generate a new UUID if none exists
-      localStorage.setItem("deviceId", storedDeviceId); // Store it in local storage
+      storedDeviceId = uuidv1();
+      localStorage.setItem("deviceId", storedDeviceId);
     }
-    setDeviceID(storedDeviceId); // Set the device ID in state
-  }, []); // Run only once when the component mounts
+    setDeviceID(storedDeviceId);
+  }, []);
 
   const onSubmit = async (data) => {
     try {
@@ -56,19 +54,25 @@ const LoginForm = () => {
         password: data.password,
         deviceId: deviceId,
       };
+  
       const response = await axios.post(`${base_url}/api/Login`, payload);
-      const {token} = response.data.data
-      localStorage.setItem('token',token)
-      const { _id } = response.data.data;  
-      localStorage.setItem('_id', _id); 
-      const {userName}= response.data.data
-      localStorage.setItem('userName',userName); 
-      // console.log(_id, "_id"); 
-      // console.log(response.data,"resp")
+      const { token, _id, userName, role } = response.data.data;
+  
+      localStorage.setItem('token', token);
+      localStorage.setItem('_id', _id);
+      localStorage.setItem('userName', userName);
+      localStorage.setItem('role', role);
+  
       if (response.status === 200) {
-        toast.success("Login successful!");
-        dispatch(handleLogin(response.data));
-        navigate("/dashboard");
+        if (role === 'Admin') {
+          toast.success("Login successful!");
+          dispatch(handleLogin(response.data));
+          navigate("/dashboard");
+        } else {
+          toast.error("Access denied.");
+          localStorage.clear();
+          navigate("/login");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -90,25 +94,35 @@ const LoginForm = () => {
       />
 
       {/* Password Input */}
-      <Textinput
-        name="password"
-        label="Password"
-        type="password"
-        placeholder="Enter your password"
-        register={register}
-        error={errors.password}
-        className="h-[48px]"
-      />
+      <div className="relative">
+        <Textinput
+          name="password"
+          label="Password"
+          type={showPassword ? "text" : "password"} // Toggle input type between text and password
+          placeholder="Enter your password"
+          register={register}
+          error={errors.password}
+          className="h-[48px]"
+        />
+        {/* Eye button to toggle password visibility */}
+        <div
+          className="absolute inset-y-0 mt-8 right-3 flex items-center cursor-pointer"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? (
+            <FaEyeSlash className="text-gray-500" /> // EyeSlash icon when password is visible
+          ) : (
+            <FaEye className="text-gray-500" /> // Eye icon when password is hidden
+          )}
+        </div>
+      </div>
 
       <div className="flex justify-between">
-        {/* Checkbox for 'Keep me signed in' */}
         <Checkbox
           value={checked}
           onChange={() => setChecked(!checked)}
           label="Keep me signed in"
         />
-
-        {/* Forgot Password Link */}
         <Link
           to="/forgot-password"
           className="text-sm text-slate-800 dark:text-slate-400 leading-6 font-medium"
@@ -117,7 +131,6 @@ const LoginForm = () => {
         </Link>
       </div>
 
-      {/* Submit Button */}
       <button className="btn btn-dark block w-full text-center" type="submit">
         Sign in
       </button>

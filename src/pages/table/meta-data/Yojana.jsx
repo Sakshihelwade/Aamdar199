@@ -57,7 +57,7 @@ const Yojana = ({ title = "योजना" }) => {
         // },
         {
             Header: "नाव",
-            accessor: "yojana",
+            accessor: "name",
             Cell: (row) => {
                 return <span>{row?.cell?.value}</span>;
             },
@@ -74,8 +74,8 @@ const Yojana = ({ title = "योजना" }) => {
                                 type="button"
                                 onClick={() => {
                                     setEditCasteModal(true);
-                                    setCastId(row.cell.row.values._id);
-                                    setCast(row.cell.row.values.yojana);
+                                    setCastId(row.cell.row.original._id);
+                                    setCast(row.cell.row.original.yojana);
                                 }}
                             >
                                 <Icon icon="heroicons:pencil-square" />
@@ -87,7 +87,7 @@ const Yojana = ({ title = "योजना" }) => {
                                 className="action-btn"
                                 type="button"
                                 onClick={() => {
-                                    setCastId(row.cell.row.values._id);
+                                    setCastId(row.cell.row.original._id);
                                     setIsOpen(true);
                                 }}
                             >
@@ -145,10 +145,10 @@ const Yojana = ({ title = "योजना" }) => {
 
     const getCaste = () => {
         axios
-            .get(`${base_url}/insert-yogna`)
+            .get(`${base_url}/api/surve/getYogna`)
             .then((resp) => {
-                setCasteMeta(resp.data.data);
-                console.log(resp)
+                setCasteMeta(resp.data.yogna);
+                // console.log(resp,"yojana")
             })
             .catch((error) => {
                 console.log(error);
@@ -157,11 +157,11 @@ const Yojana = ({ title = "योजना" }) => {
 
     const addCast = async () => {
         const payload = {
-            yojana: cast
+            name: cast
         }
         console.log(payload)
         try {
-            const resp = await axios.post(`${base_url}/insertCastMeta`, payload)
+            const resp = await axios.post(`${base_url}/insert-yogna`, payload)
             console.log(resp.data)
             toast.success("समाविष्ट केले")
             stAddCastModal(false)

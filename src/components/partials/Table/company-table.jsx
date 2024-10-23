@@ -377,6 +377,7 @@ import Modal from "../../ui/Modal";
 import axios from "axios";
 import { base_url } from "../../../config/base_url";
 import InputGroup from "../../../components/ui/InputGroup"
+import { toast } from "react-toastify";
 
 
 const CompanyTable = () => {
@@ -509,6 +510,8 @@ const CompanyTable = () => {
   ];
   const token = localStorage.getItem('token');
   const idd = localStorage.getItem('_id');
+  const userRole = localStorage.getItem('role');
+  console.log(userRole, "user")
   // console.log(id,d"iiiiiiiiiiii")
   const [selectedUserId, setSelectedUserId] = useState('')
   const [selectedUser, setSelectedUser] = useState(null);
@@ -534,10 +537,8 @@ const CompanyTable = () => {
   // console.log(village,"villlllllage")
 
   useEffect(() => {
-    getAllData();
     getAllVillages();
   }, [])
-
 
   const getAllData = async () => {
     try {
@@ -548,6 +549,7 @@ const CompanyTable = () => {
       console.log(error);
     }
   };
+
 
   const getAllVillages = async () => {
     try {
@@ -575,13 +577,14 @@ const CompanyTable = () => {
     };
     try {
       const response = await axios.post(`${base_url}/api/updateUser/${selectedUserId}`, payload
-        ,{
-        headers:{
-          Authorization:`Bearer ${token}`
+        , {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      }
-    );
-      console.log(response.data, "updated Successfully");
+      );
+      
+      toast.success( "updated Successfully");
       setEditVillageModal(false);
       getAllData();
     } catch (error) {
@@ -604,6 +607,12 @@ const CompanyTable = () => {
       setVillage([...village, data]);
     }
   };
+
+  useEffect(() => {
+    getAllData();
+  }, [])
+
+
   const tableInstance = useTable(
     {
       columns,
@@ -805,16 +814,17 @@ const CompanyTable = () => {
                 id="role"
                 name="role"
                 className="w-full border border-gray-300 rounded-md p-1 focus:outline-none focus:ring-2 focus:ring-[#FFB033]"
-              // value={role}
-
+                value={role}
+                onChange={(e) => setRole(e.target.value)} // Attach onChange to select
               >
-                {Roleoptions.map((item) => {
-                  return (
-                    <><option value={role} onChange={(selectedRole) => setRole(selectedRole)}>{item.label}</option></>
-                  )
-                })}
+                {Roleoptions.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
               </select>
             </div>
+
 
             <div className="mx-2 my-1">
               <label htmlFor="userName" className="block text-gray-700">UserName / वापरकर्ता</label>
@@ -871,7 +881,7 @@ const CompanyTable = () => {
             <button
               type="submit"
               className="btn btn-primary block text-center"
-              // onClick={() => updateData}
+            // onClick={() => updateData}
             >
               Update
             </button>

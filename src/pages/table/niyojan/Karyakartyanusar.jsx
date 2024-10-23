@@ -89,7 +89,7 @@ const Karyakartyanusar = () => {
 
   const getAllData = async () => {
     try {
-      const response = await axios.get(`${base_url}/api/getAllUser`);
+      const response = await axios.get(`${base_url}/api/get-All-karykarte`);
       console.log(response.data.users, "responseeeeeeeeee");
       const karyakarta = response.data.users?.map((item) => ({
         label: item?.fullName,

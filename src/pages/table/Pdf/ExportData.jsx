@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import { base_url } from "../../../config/base_url";
@@ -28,13 +28,14 @@ const ExportData = () => {
     const [karyakartaName, setKaryakartaName] = useState('');
     const [status, setStatus] = useState('');
     const [casteOption, setCastOption] = useState([])
-    const [colorOptions,setColorOptions]= useState([])
-    const [userOptions, setUserOptions]= useState([])
+    const [colorOptions, setColorOptions] = useState([])
+    const [userOptions, setUserOptions] = useState([])
+    const printRef = useRef();
 
     const SerachBy = [
-        { label: 'पुरुष', value: 'male' },
-        { label: 'महिला', value: 'female' },
-        { label: 'माहित नाही', value: 'unknown' },
+        { label: 'पुरुष', value: 'पुरुष' },
+        { label: 'महिला', value: 'महिला' },
+        { label: 'माहित नाही', value: 'माहित नाही' },
     ];
 
     const statusOptions = [
@@ -58,10 +59,10 @@ const ExportData = () => {
     const getVillageOption = () => {
         axios.get(`${base_url}/api/surve/getAllVoterVillages/${id}`)
             .then((resp) => {
-                // const villageOptions = resp.data.village?.map((item) => ({
-                //     label: item?.name,
-                //     value: item?._id
-                // }));
+                const villageOptions = resp.data.village?.map((item) => ({
+                    label: item?.name,
+                    value: item?._id
+                }));
                 setVillageOption(villageOptions);
             })
             .catch((error) => {
@@ -76,6 +77,7 @@ const ExportData = () => {
                     label: item.boothNo, value: item.boothNo
                 }))
                 setBoothOption(boothNo);
+                console.log(resp.data, "boothno")
             })
             .catch((error) => {
                 console.log(error);
@@ -84,7 +86,7 @@ const ExportData = () => {
 
     const getPrintingData = async () => {
         try {
-            const response = await axios.get(`${base_url}/print-Report/${id}?printOut=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&cardNumber=${cardNo}&minBooth=${fromList}&maxBooth=${toList}&minAge=${fromAge}&maxAge=${toAge}&gender=${gender}&caste=${caste}&colour=${color}&aliveOrDead=${status}&`);
+            const response = await axios.get(`${base_url}/api/surve/searchVotter/${id}?printOut=true&name=true&boothNo=${boothNo}&village=${villageName}&serialNo=${srNo}&nameFilter=${voterName}&cardNumber=${cardNo}&minBooth=${fromList}&maxBooth=${toList}&minAge=${fromAge}&maxAge=${toAge}&gender=${gender}&caste=${caste}&colour=${color}&aliveOrDead=${status}`);
             console.log(response.data, "print Data");
             setAllData(response.data.voters);
             setTotal(response.data.voters.length);
@@ -96,9 +98,9 @@ const ExportData = () => {
     const getCasteOption = () => {
         axios.get(`${base_url}/getCastMeta`)
             .then((resp) => {
-                const casteOption = resp.data.data.map((item) => ({
-                    label: item.castname,
-                    value: item._id,
+                const casteOption = resp.data.data?.map((item) => ({
+                    label: item?.castname,
+                    value: item?._id,
                 }));
                 setCastOption(casteOption);
 
@@ -112,9 +114,9 @@ const ExportData = () => {
         axios
             .get(`${base_url}/get-colour`)
             .then((resp) => {
-                const colors = resp.data.data.map((item) => ({
-                    label: item.color,
-                    value: item._id,
+                const colors = resp.data.data?.map((item) => ({
+                    label: item?.color,
+                    value: item?._id,
                 }));
                 setColorOptions(colors);
                 console.log(resp.data)
@@ -126,17 +128,17 @@ const ExportData = () => {
 
     const getUsers = async () => {
         try {
-          const response = await axios.get(`${base_url}/api/getAllUser`);
-          console.log(response.data, "responseeeeeeeeee");
-          const users = response.data.users.map((item) => ({
-            label: item.fullName,
-            value: item._id,
-        }));
-          setUserOptions(users)
+            const response = await axios.get(`${base_url}/api/get-All-karykarte`);
+            console.log(response.data, "responseeeeeeeeee");
+            const users = response.data?.users.map((item) => ({
+                label: item?.fullName,
+                value: item?._id,
+            }));
+            setUserOptions(users)
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
+    };
 
     const clearFields = () => {
         setVillageId("");
@@ -166,7 +168,7 @@ const ExportData = () => {
 
     useEffect(() => {
         getPrintingData();
-    }, [boothNo,srNo,voterName,fromList,toList,fromAge,toAge,gender,caste,color,status]);
+    }, [boothNo, srNo, voterName, fromList, toList, fromAge, toAge, gender, caste, color, status, cardNo, villageName]);
 
     useEffect(() => {
         getCasteOption();
@@ -175,7 +177,7 @@ const ExportData = () => {
     useEffect(() => {
         getColor();
     }, []);
-    
+
     useEffect(() => {
         getUsers();
     }, []);
@@ -185,7 +187,7 @@ const ExportData = () => {
             <div className="mb-4">
                 <Card>
                     <div className="mb-2 flex justify-between">
-                        <h6 className="font-bold text-[#b91c1c]">Print PDF</h6>
+                        <h6 className="font-bold text-[#b91c1c]" onClick={window.print}>Print PDF</h6>
                         <div className="flex gap-6">
                             <h6 className="font-bold text-[#b91c1c] text-lg">एकूण: {total}</h6>
                         </div>
@@ -331,9 +333,12 @@ const ExportData = () => {
                                 classNamePrefix="select"
                             />
                         </div>
-                        <div className="flex justify-end items-center mt-6">
+                        <div className="flex justify-evenly mt-6">
                             <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={clearFields}>
                                 क्लियर करा
+                            </button>
+                            <button className='bg-[#b91c1c] text-white px-5 h-10 rounded-md' onClick={window.print}>
+                                Print
                             </button>
                         </div>
                     </div>
@@ -341,7 +346,74 @@ const ExportData = () => {
             </div>
 
             <div>
-                <ExportDataTable data={allData} />
+                <div className="p-1" id='print-content' ref={printRef}>
+                    <div className='text-center py-2 mt-5 mb-3 font-semibold'>
+                        <p> गाव : {villageName} &nbsp;&nbsp;&nbsp; भाग/बूथ नं : {boothNo}  &nbsp;&nbsp;&nbsp; एकूण : {total}</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full bg-white border border-gray-200">
+                            <thead>
+                                <tr className="bg-gray-300 text-gray-600 text-sm leading-normal">
+                                    {/* Table Headers */}
+                                    <th className="px-1 py-2 border border-gray-300">भाग/बूथ नं</th>
+                                    <th className="px-1 py-2 border border-gray-300">अ.नं.</th>
+                                    <th className="px-1 py-2 border border-gray-300">नाव</th>
+                                    <th className="px-1 py-2 border border-gray-300">वय</th>
+                                    <th className="px-1 py-2 border border-gray-300">लिंग</th>
+                                    <th className="px-1 py-2 border border-gray-300">मोबाईल नं</th>
+                                    <th className="px-1 py-2 border border-gray-300">नवीन पत्ता</th>
+                                    <th className="px-1 py-2 border border-gray-300">घर नं</th>
+                                    <th className="px-1 py-2 border border-gray-300">पत्ता</th>
+                                    <th className="px-1 py-2 border border-gray-300">कार्ड नं</th>
+                                    <th className="px-1 py-2 border border-gray-300">मुळगाव</th>
+                                    <th className="px-1 py-2 border border-gray-300">स्टेटस</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-gray-600 text-sm font-light">
+                                {allData?.map((item, index) => {
+                                    return (
+                                        <>
+                                            <tr className={`odd:bg-gray-100 even:bg-white`} key={index}>
+                                                {/* Table Data */}
+                                                <td className="px-1 py-2 border border-gray-300">{item?.boothNo}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.serialNo}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.name}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.age}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.gender}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.mobile}</td>
+                                                <td className="px-1 py-2 border border-gray-300"></td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.houseNo}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.address}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.cardNumber}</td>
+                                                <td className="px-1 py-2 border border-gray-300">{item?.nativePlace}</td>
+                                                <td className="px-1 py-2 border border-gray-300"></td>
+                                            </tr>
+                                        </>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {/* Print Styles */}
+                <style>
+                    {`
+          @media print {
+              body * {
+                  visibility: hidden;
+              }
+              #print-content, #print-content * {
+                  visibility: visible;
+              }
+              #print-content {
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  width: 100vw;
+              }
+          }
+        `}
+                </style>
             </div>
         </div>
     );

@@ -1,12 +1,15 @@
 import { all } from 'axios';
 import React, { useRef } from 'react';
 
-const ExportDataTable = ({ props ,boothNo,villageName, total}) => {
+const ExportDataTable = ({ data, boothNo, villageName, total }) => {
   const printRef = useRef();
   // console.log(villageName,boothNo, "allData")
   return (
     <>
       <div className="p-1" id='print-content' ref={printRef}>
+        <div className='flex justify-end items-end'>
+          <button className='bg-[#b91c1c] text-white px-5 h-10 rounded-md' onClick={window.print}>Print</button>
+        </div>
         <div className='text-center py-2 mb-3 font-semibold'>
           <p> गाव : {villageName} &nbsp;&nbsp;&nbsp; भाग/बूथ नं : {boothNo}  &nbsp;&nbsp;&nbsp; एकूण : {total}</p>
         </div>
@@ -30,10 +33,10 @@ const ExportDataTable = ({ props ,boothNo,villageName, total}) => {
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {props?.map((item, index) => {
+              {data?.map((item, index) => {
                 return (
                   <>
-                    <tr className={`odd:bg-gray-100 even:bg-white`}  key={index}>
+                    <tr className={`odd:bg-gray-100 even:bg-white`} key={index}>
                       {/* Table Data */}
                       <td className="px-1 py-2 border border-gray-300">{item?.boothNo}</td>
                       <td className="px-1 py-2 border border-gray-300">{item?.serialNo}</td>
