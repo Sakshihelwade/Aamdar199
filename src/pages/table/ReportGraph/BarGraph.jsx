@@ -221,7 +221,6 @@ const BarGraph = ({ height = 400, year }) => {
   console.log(percentage,"percentage")
   const [isDark] = useDarkMode();
   const [isRtl] = useRtl();
-// console.log(graphData,"//////s///////////")
   const getGraphData = () => {
     axios.get(`${base_url}/GraphAPI?year=${year}`)
       .then((resp) => {
