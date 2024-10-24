@@ -28,17 +28,18 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   const [nagerOption, setNagerOption] = useState([])
   const [societyOption, setSocietyOption] = useState([])
   const [yojnaOption, setYojnaOption] = useState([])
-  console.log(mulgav, "mulgav")
-
+  const [boothOption,setBoothOption]=useState([])
+  const [boothNo,setBoothNo]=useState('')
+  const [age,setAge]=useState('')
+  const [gender,setGender]=useState('')
   const [isSelected, setIsSelected] = useState(false);
 
   const handleSelectRow = () => {
     setIsSelected((prevState) => !prevState);
   };
 
-  const HeadOfFamily = {
-    isSelected: isSelected
-  };
+  const HeadOfFamily = isSelected
+  
 
   // console.log(isSelected, "...........");
   
@@ -80,10 +81,12 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
     tyancheNaraj: null,
 
   });
-  console.log(formData.nativeVillage)
-  console.log(formData.aadhaarNo)
+ 
 
   const handleClear = () => {
+    setAge('')
+    setGender('')
+    setBoothNo('')
     setFormData({
       name: "",
       houseNo: "",
@@ -143,9 +146,15 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
     { label: "घर बंद", value: "घर बंद" },
   ];
 
+  const genderOption = [
+    { label: "पुरुष", value: "पुरुष" },
+    { label: "महिला", value: "महिला" },
+    { label: "माहित नाही", value: "माहित नाही" },
+];
+
   const aliveOptions = [
-    { label: "जिवंत", value: "जिवंत" },
-    { label: "मृत", value: "मृत" },
+    { label: "जिवंत", value: "Alive" },
+    { label: "मृत", value: "Dead" },
   ];
 
   const getVillageOptions = async () => {
@@ -211,6 +220,20 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
         console.log(error)
       })
 
+  }
+
+  const getBoothNo = () => {
+    axios.get(`${base_url}/api/surve/getSortBooth/${id}`)
+      .then((resp) => {
+        const boothNo = resp.data.booths.map((item) => ({
+          label: item.boothNo, value: item.boothNo
+        }))
+        setBoothOption(boothNo)
+
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const getLandmarkOption = () => {
@@ -280,7 +303,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
         const casteOption = resp.data.users.map((item) => ({
           label: item.fullName,
 
-          value: item.fullName,
+          value: item._id,
 
         }));
         setKaryakartaOption(casteOption);
@@ -294,6 +317,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
   useEffect(() => {
     getLandmarkOption()
     getNager()
+    getBoothNo()
     getSociety()
     getYojna()
     getVillageOptions();
@@ -355,9 +379,13 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
       apleNaraj: formData.apleNaraj,
       tyncheNaraj: formData.tyancheNaraj,
       namesOfMembers: FamilyMember,
-      nameOfHeadOfFamily: HeadOfFamily
+      nameOfHeadOfFamily: HeadOfFamily,
+      boothNo:boothNo,
+      age:age,
+      gender:gender
 
     };
+    console.log(payload,"update payload")
     axios
       .post(
         `${base_url}/api/surve/update-voter/${selectedRowData?._id}`,
@@ -426,8 +454,33 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 />
               </div>
 
+              <div className=" flex">
+                <label htmlFor="" className=" w-20">
+                वय
+                </label>
+                <InputGroup
+                  type="text"
+                  // label="घर क्र."
+                  id="name"
+                  placeholder="वय"
+                  value={age}
+                  onChange={(e)=>setAge(e.target.value)}
+                />
+              </div>
 
-
+              
+              <div className="flex w-full mb-4">
+                <label htmlFor="landmark" className="w-28">
+                लिंग
+                </label>
+                <Select
+                  className="w-full"
+                  placeholder="लिंग"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                  options={genderOption}
+                />
+              </div>
               <div className=" flex">
                 <label htmlFor="" className=" w-20">
                   घर क्र.
@@ -441,6 +494,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   onChange={handleInputChange}
                 />
               </div>
+
 
               <div className="flex w-full mb-4">
                 <label htmlFor="landmark" className="w-28">
@@ -585,7 +639,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 </div>
               </div>
 
-              <div className="flex items-center mb-4 pt-0">
+              <div className="flex items-center mb-4 pt-2">
                 <label htmlFor="bachatGat" className="w-64">
                   महिला बचत गट
                 </label>
@@ -615,35 +669,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 </div>
               </div>
 
-              <div className="flex items-center mb-4 pt-0">
-                <label htmlFor="society" className="w-64">
-                  सोसायटी पदाधिकारी
-                </label>
-                <div className="w-full">
-                  <label className="inline-flex items-center mr-4">
-                    <input
-                      type="radio"
-                      name="society"
-                      value={true}
-                      checked={formData.society === true}
-                      onChange={() => handleSelectChange("society", true)}
-                      className="form-radio text-blue-500"
-                    />
-                    <span className="ml-2">आहे</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="society"
-                      value={false}
-                      checked={formData.society === false}
-                      onChange={() => handleSelectChange("society", false)}
-                      className="form-radio text-blue-500"
-                    />
-                    <span className="ml-2">नाही</span>
-                  </label>
-                </div>
-              </div>
+             
 
               <div className="flex items-center mb-4 pt-0">
                 <label htmlFor="bankAccountHolder" className="w-64">
@@ -712,6 +738,23 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                   value={formData.village}
                   options={villageOptions}
                   onChange={(e) => handleSelectChange("village", e.target.value)}
+                />
+              </div>
+
+              <div className=" flex">
+                <label htmlFor="" className=" w-28">
+                भाग/बूथ नं
+
+                </label>
+
+                <Select
+                  // label="गाव"
+                  className="w-full"
+                  placeholder="भाग/बूथ नं
+"
+                  value={boothNo}
+                  options={boothOption}
+                  onChange={(e) => setBoothNo(e.target.value)}
                 />
               </div>
               <div className="pt-1 pb-1">Detail Address</div>
@@ -865,7 +908,37 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 </div>
               </div>
 
-              <div className="flex items-center mb-4 pt-3">
+              <div className="flex items-center mb-4 pt-0">
+                <label htmlFor="society" className="w-64">
+                  सोसायटी पदाधिकारी
+                </label>
+                <div className="w-full">
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="radio"
+                      name="society"
+                      value={true}
+                      checked={formData.society === true}
+                      onChange={() => handleSelectChange("society", true)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">आहे</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="society"
+                      value={false}
+                      checked={formData.society === false}
+                      onChange={() => handleSelectChange("society", false)}
+                      className="form-radio text-blue-500"
+                    />
+                    <span className="ml-2">नाही</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-center mb-4 pt-0">
                 <label className="w-64">आपले नाराज</label>
                 <div className="w-full flex gap-4">
                   <label className="inline-flex items-center">
@@ -893,7 +966,7 @@ const EditModal = ({ ActiveDiactiveModal, activeModal, selectedRowData }) => {
                 </div>
               </div>
 
-              <div className="flex items-center mb-4 pt-2">
+              <div className="flex items-center mb-4 pt-0">
                 <label className="w-64">त्यांचे नाराज</label>
                 <div className="w-full flex gap-4">
                   <label className="inline-flex items-center">

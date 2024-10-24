@@ -32,8 +32,15 @@ const NameWiseList = () => {
   const [editModal, setEditModal] = useState()
   const id = localStorage.getItem('_id')
 
+const [print,setPrint]=useState(true)
+
   const totalmalefemale = voterCount?.maleCount + voterCount?.femaleCount
   const other = voterCount?.total - totalmalefemale || 0
+
+const handlePrint=()=>{
+  setPrint(false)
+  window.print()
+}
 
   const handelEditModal = (val) => {
     setEditModal(val)
@@ -61,8 +68,10 @@ const NameWiseList = () => {
     setCurrentPage(1);
     setAllVoter([]);
     setVoterCount({});
+  setPrint(true)
     getAllVoters()
   };
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -133,19 +142,25 @@ const NameWiseList = () => {
       })
   }
 
+
   const getAllVoters = () => {
-    axios
-      .get(`${base_url}/api/surve/searchVotter/${id}?name=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&village=${villageName}&cardNumber=${cardNo}&page=${currentPage}`)
+    const url = print 
+      ? `${base_url}/api/surve/searchVotter/${id}?name=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&village=${villageName}&cardNumber=${cardNo}&page=${currentPage}`
+      : `${base_url}/api/surve/searchVotter/${id}?name=true&printOut=true&boothNo=${boothNo}&serialNo=${srNo}&nameFilter=${voterName}&village=${villageName}&cardNumber=${cardNo}&page=${currentPage}`;
+  
+    axios.get(url)
       .then((resp) => {
         setAllVoter(resp.data.voters);
         setVoterCount(resp.data);
-        // toast.success('Filter Sucessfully')
+        
+        // toast.success('Filter Successfully');
       })
       .catch((error) => {
         console.log(error);
-        // toast.warning('No results found for the provided search criteria')
+        // toast.warning('No results found for the provided search criteria');
       });
   };
+  
 
 
   useEffect(() => {
@@ -164,7 +179,7 @@ const NameWiseList = () => {
 
   useEffect(() => {
     getAllVoters()
-  }, [currentPage, villageName, boothNo, srNo, voterName, cardNo, editModal])
+  }, [currentPage, villageName, boothNo, srNo, voterName, cardNo, editModal,print])
 
 
   return (
@@ -315,22 +330,43 @@ const NameWiseList = () => {
               value={relativeName}
               onChange={(e) => setRelativeName(e.target.value)}
             /> */}
-            <div className="flex justify-end items-center mt-6">
+            <div className="flex justify-end gap-2 items-center mt-6">
 
 
               <button className="bg-[#b91c1c] text-white px-5 h-10 rounded-md" onClick={handleClear}>
                 Clear
               </button>
+              <button onClick={handlePrint}  className="bg-[#b91c1c] text-white px-5 h-10 rounded-md">Print</button>
 
             </div>
           </div>
         </Card>
       </div>
       <Card>
+        <div id='print-content'>
         <NameWiseCommonTable Props={allVoter} voterCount={voterCount} currentPage={currentPage}
           setCurrentPage={setCurrentPage} onPageChange={handlePageChange} handelEditModal={handelEditModal} />
+      </div>
       </Card>
       {/* <AddNewVoter/> */}
+      <style>
+                    {`
+          @media print {
+              body * {
+                  visibility: hidden;
+              }
+              #print-content, #print-content * {
+                  visibility: visible;
+              }
+              #print-content {
+                  position: absolute;
+                  left: 0;
+                  top: 0;
+                  width: 100vw;
+              }
+          }
+        `}
+                </style>
     </div>
   );
 };

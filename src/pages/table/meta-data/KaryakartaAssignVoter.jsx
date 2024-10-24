@@ -6,8 +6,10 @@ import Select, { components } from "react-select";
 
 import Card from '../../../components/ui/Card';
 import InputGroup from "@/components/ui/InputGroup";
+import { fromJSON } from 'postcss';
+import { toast } from 'react-toastify';
 
-const KaryakartaAssignVoter = ({handelSetData,handleFamilyModal,familyMember}) => {
+const KaryakartaAssignVoter = ({handelSetData,handleFamilyModal,familyMember,handleSelectedFiler,selectedRowData}) => {
     const [villageId, setVillageId] = useState("");
     const [villageName, setVillageName] = useState("");
     const [boothNo, setBoothNo] = useState("");
@@ -23,18 +25,22 @@ const KaryakartaAssignVoter = ({handelSetData,handleFamilyModal,familyMember}) =
   const [selectedRows, setSelectedRows] = useState([]); 
   const [villageOption, setVillageOption] = useState([]);
   const [boothOption,setBoothOption]=useState([])
-  console.log(selectedRows,"selectedRows/////////////////")
   const data = allVoter?.length > 0 ? allVoter : [];
   const totalPages = Math.ceil(voterCount?.total / 25);
   const id=localStorage.getItem('_id')
+  const [selectedFilter,setSelectedFilter]=useState([])
 
+  const idArray = selectedRows?.map(voter => voter._id);
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   let currentRows = data;
 
+console.log(selectAllVoter,'selectAllVoter')
 useEffect(()=>{
     handelSetData(selectedRows)
 })
+
+handleSelectedFiler(selectedFilter)
 
 const handleVillageChange = (selectedOption) => {
     setVillageId(selectedOption?.value || "");
@@ -53,7 +59,8 @@ const handleVillageChange = (selectedOption) => {
 
   const handleSubmit = () => {
     if (validateFields()) {
-      handleFamilyModal(false); // Proceed with submit action
+        postAssignKaryakarta()
+     
     }
   };
 
@@ -113,6 +120,43 @@ const handleVillageChange = (selectedOption) => {
     }
   };
 
+
+  const postAssignKaryakarta = () =>{
+const payload = selectAllVoter ? 
+    {
+        village: villageName,
+        boothNo: boothNo,
+        minBooth: fromList,
+        maxBooth: toList
+    }
+     :
+     {
+        karyakarta: selectedRowData?._id,
+        voters: idArray
+    }
+     
+    console.log(payload,"payload")
+    axios.post(`${base_url}/api/surve/assignVoters`,payload)
+    .then((resp)=>{
+        console.log(resp)
+        toast.success('Assign Voter Sucessfully')
+    handleClear()
+        handleFamilyModal(false); 
+    })
+    .catch((error)=>{
+        console.log(error)
+    })
+}
+
+  useEffect(()=>{
+    setSelectedFilter({
+        villageName,
+        boothNo,
+        fromList,
+        toList
+    })
+  },[villageName,boothNo,fromList,toList])
+
   useEffect(()=>{
     getBoothNo()
  },[villageName])
@@ -139,6 +183,7 @@ useEffect(()=>{
  setFromList('')
  setToList('')
  setAllVoter([])
+ setSelectedRows([])
   };
 
   const handleNext = () => {
@@ -171,7 +216,7 @@ useEffect(()=>{
   return (
     <Card>
       <div className="p-1">
-        <div className='grid grid-cols-5 gap-2 mb-2'>
+        <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 mb-2'>
         <div>
             <label className="form-label" htmlFor="mul_1">गाव</label>
             <Select

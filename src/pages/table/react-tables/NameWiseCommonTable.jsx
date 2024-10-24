@@ -5,8 +5,7 @@ import Tooltip from "@/components/ui/Tooltip";
 import Icon from "@/components/ui/Icon";
 import Modal from '../../../components/ui/Modal';
 
-
-const NameWiseCommonTable = ({ Props, onPageChange, voterCount,handelEditModal }) => {
+  const NameWiseCommonTable = ({ Props, onPageChange, voterCount,handelEditModal }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +13,7 @@ const NameWiseCommonTable = ({ Props, onPageChange, voterCount,handelEditModal }
   const [inputPage, setInputPage] = useState();
   const [selectedRow,setSelectedRow]=useState()
   const [activeViewModal,setActiveViewModal]=useState(false)
-
+console.log(Props,"Props")
   const data = Props?.length > 0 ? Props : [];  
   const totalPages = Math.ceil(voterCount?.total / 25);
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -73,7 +72,7 @@ console.log(selectedRow)
 
   return (
     <div className="p-1">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" id='print-content'>
         <table className="w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-300 text-gray-600 text-sm leading-normal">
@@ -120,7 +119,10 @@ console.log(selectedRow)
             }}>
               <Icon icon="heroicons:eye" />
             </button>
+           
           </Tooltip>
+        
+       
           {/* <Tooltip content="Edit" placement="top" arrow animation="shift-away">
             <button className="action-btn" type="button" onClick={()=>setActiveModal(true)}> 
               <Icon icon="heroicons:pencil-square" />
@@ -211,6 +213,8 @@ console.log(selectedRow)
       </div>
 
 <EditModal ActiveDiactiveModal={ActiveDiactiveModal} activeModal={activeModal} selectedRowData={selectedRowData}/>
+
+
     </div>
   );
 };
