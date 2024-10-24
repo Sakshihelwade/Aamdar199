@@ -271,52 +271,37 @@ const Society = ({ title = "सोसायटी" }) => {
             <div className="overflow-x-auto -mx-6">
                 <div className="inline-block min-w-full align-middle">
                     <div className="overflow-hidden">
-                        <table
-                            className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
-                            {...getTableProps()}
-                        >
-                            <thead className="bg-slate-200 dark:bg-slate-700">
-                                {headerGroups.map((headerGroup) => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map((column) => (
-                                            <th
-                                                {...column.getHeaderProps(column.getSortByToggleProps())}
-                                                scope="col"
-                                                className="table-th"
-                                            >
-                                                {column.render("Header")}
-                                                <span>
-                                                    {column.isSorted
-                                                        ? column.isSortedDesc
-                                                            ? " 🔽"
-                                                            : " 🔼"
-                                                        : ""}
-                                                </span>
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody
-                                className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700"
-                                {...getTableBodyProps()}
-                            >
-                                {page.map((row) => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map((cell) => {
-                                                return (
-                                                    <td {...cell.getCellProps()} className="table-td">
-                                                        {cell.render("Cell")}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                    <table {...getTableProps()} className="w-full bg-white border border-gray-200">
+                <thead className="bg-slate-200">
+                  {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-200 text-gray-600 text-sm leading-normal">
+                      {headerGroup.headers.map(column => (
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())} className="px-1 py-2 border border-gray-300">
+                          {column.render("Header")}
+                          <span>{column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}</span>
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody {...getTableBodyProps()} className="text-gray-600 text-sm font-light">
+                  {page.map(row => {
+                    prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()} className="cursor-pointer  border-b border-gray-200 hover:bg-gray-100" onClick={() =>{ handleAddressSelect(row.original.address)
+                        navigate('/AddressWiseTable2' , { state: { address: row.original.address } })
+                       
+                      }}>
+                        {row.cells.map(cell => (
+                          <td {...cell.getCellProps()} className="px-1 py-2 border border-gray-300">
+                            {cell.render("Cell")}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
                     </div>
                 </div>
             </div>

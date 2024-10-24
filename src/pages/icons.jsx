@@ -155,10 +155,9 @@ const icons = [
     name: "heroicons:wrench",
   },
   {
-    name: "logos:whatsapp", // WhatsApp icon added
+    name: "FontAwesomeIcon:faWhatsapp", // WhatsApp icon added
   },
 ];
-
 const IconPage = () => {
   const [skin] = useSkin();
   return (

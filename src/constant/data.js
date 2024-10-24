@@ -1,3 +1,6 @@
+import whatsapp from '../assets/images/logo/whatsapp.png'
+console.log(whatsapp);
+
 export const menuItems = [
   // {
   //   isHeadr: true,
@@ -207,8 +210,9 @@ export const menuItems = [
     ],
   },
   {
-    title: "",
-    icon: "logos:whatsapp",
+    title: "Whatsapp",
+    // icon: "logos:whatsapp",
+    // icon:whatsap,
     link: "whatsapp",
     isOpen: true,
     isHide: true,
@@ -506,6 +510,7 @@ import file2Img from "@/assets/images/icon/pdf-1.svg";
 import file3Img from "@/assets/images/icon/zip-1.svg";
 import file4Img from "@/assets/images/icon/pdf-2.svg";
 import file5Img from "@/assets/images/icon/scr-1.svg";
+import { icon } from "leaflet";
 
 export const files = [
   {
