@@ -44,34 +44,29 @@ const IndeterminateCheckbox = React.forwardRef(
 const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
 
     const COLUMNS = [
+       
         {
-            Header: "अ.क्र.",
-            accessor: "srNo",
-            Cell: ({ row }) => {
-                return <span>{row.index + 1}</span>;
-            },
-        },
-        {
-            Header: "नाव",
-            accessor: "castname",
+            Header: "fullname",
+            accessor: "fullName",
             Cell: (row) => {
                 return <span>{row?.cell?.value}</span>;
             },
         },
         {
-            Header: "गाव",
-            accessor: "castnam",
+            Header: "village",
+            accessor: "village",
             Cell: (row) => {
                 return <span>{row?.cell?.value}</span>;
             },
         },
         {
             Header: "मोबाईल नं",
-            accessor: "castna",
+            accessor: "mobileNumber",
             Cell: (row) => {
                 return <span>{row?.cell?.value}</span>;
             },
         },
+     
         {
             Header: "कृती",
             accessor: "action",
@@ -120,8 +115,9 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
 
     ];
     const columns = useMemo(() => COLUMNS, []);
-    const [casteMeta, setCasteMeta] = useState([]);
-    const data = useMemo(() => casteMeta, [casteMeta]);
+   
+    const [karyakarta,setKaryakarta]=useState([])
+    const data = useMemo(() => karyakarta, [karyakarta]);
     const [editCasteModal, setEditCasteModal] = useState(false)
     const [viewKaryakartaModal, setViewKaryakartaModal] = useState(false)
     const [selectedRowData, setSelectedRowData] = useState(null);
@@ -129,16 +125,23 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
     const [activeModal, setActiveModal] = useState(false);
     const [allVoter, setAllVoter] = useState([])
     const familyMember = [...(selectedRowData?.namesOfMembers || []), ...data];
-
+    const token=localStorage.getItem('token')
     const [addCasteModal, stAddCastModal] = useState(false)
     const [cast, setCast] = useState('')
     const [name, setName] = useState("");
-    const [village, setVillage] = ("")
-    const [mobileNo, setMobileNo] = ("")
+    const [village, setVillage] = useState ("")
+    const [mobileNo, setMobileNo] =useState ("")
     const [castId, setCastId] = useState("")
     const [isOpen, setIsOpen] = useState(false);
     const [selectedRow, setSelectedRow]= useState("")
-    console.log(selectedRow)
+    const [selectedFilter,setSelectedFilter]=useState({})
+   
+    const idArray = selecteVoter?.map(voter => voter._id);
+     console.log(idArray,"selectedFilter")
+
+const handleSelectedFiler = (val)=>{
+    setSelectedFilter(val)
+}
 
     const handelSetData = (value) => {
         setSelectedVoter(value)
@@ -148,17 +151,34 @@ const NewKaryakarta = ({ title = "कार्यकर्ता" }) => {
         setActiveModal(val)
     }
 
+    const getKaryakartaOption = () => {
+        axios.get(`${base_url}/api/get-All-karykarte`)
+          .then((resp) => {
+            setKaryakarta(resp.data.users)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+
 const addKaryakarta=()=>{
     const payload={
-        fullName:name,
-        address:village,
+         fullName:name,
+         address:village,
+         userName:name,
+         password:"",
         mobileNumber:mobileNo,
         loginRights:false
     }
-    axios.post(`${base_url}/api/addUser`,payload)
+    axios.post(`${base_url}/api/addUser`,payload,{
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+    })
     .then((resp)=>{
-        console.log(resp)
-        toast.success('Karyakarta Add Successfully')
+        stAddCastModal(false)
+        getKaryakartaOption()
+     toast.success('Karyakarta Add Successfully')
     })
     .catch((error)=>{
         console.log(error)
@@ -198,16 +218,6 @@ const addKaryakarta=()=>{
 
     const { globalFilter, pageIndex, pageSize } = state;
 
-    const getCaste = () => {
-        axios
-            .get(`${base_url}/getCastMeta`)
-            .then((resp) => {
-                setCasteMeta(resp.data.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
 
   
 
@@ -220,7 +230,7 @@ const addKaryakarta=()=>{
             console.log(resp.data)
             toast.success("यशस्वीरित्या अद्यतनित केले")
             handleClose()
-            getCaste()
+            
         } catch (error) {
             console.log(error)
             toast.error("पुन्हा प्रयत्न करा")
@@ -231,7 +241,7 @@ const addKaryakarta=()=>{
         try {
             await axios.post(`${base_url}/deleteCast/${castId}`);
             toast.success("यशस्वीरित्या हटवले");
-            getCaste();
+          
         } catch (error) {
             console.error('Error deleting item:', error);
             toast.error("काहीतरी चूक झाली. कृपया पुन्हा प्रयत्न करा");
@@ -260,13 +270,16 @@ const addKaryakarta=()=>{
             });
     };
 
+ 
+
     const handleRowClick = (row) => {
-        setSelectedRowData(row);
+        setSelectedRowData(row?.original);
         setActiveModal(true);
     };
 
     useEffect(() => {
-        getCaste();
+      
+        getKaryakartaOption()
     }, []);
 
     return (
@@ -490,7 +503,7 @@ const addKaryakarta=()=>{
                 // themeClass="bg-[#b91c1c]"
                 onClose={() => setActiveModal(false)}
             >
-                <KaryakartaAssignVoter handelSetData={handelSetData} handleFamilyModal={handleFamilyModal} familyMember={familyMember} />
+                <KaryakartaAssignVoter handelSetData={handelSetData} handleFamilyModal={handleFamilyModal} familyMember={familyMember} handleSelectedFiler={handleSelectedFiler} selectedRowData={selectedRowData}/>
             </Modal>
 
             <Modal
